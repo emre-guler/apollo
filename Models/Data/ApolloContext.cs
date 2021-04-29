@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Apollo.Entities;
 
 namespace Apollo.Data 
 {
@@ -14,5 +15,15 @@ namespace Apollo.Data
             // Özel veri girişi
         }
 
+        public DbSet<Achievement> Achievements { get; set; } 
+        public DbSet<City> Cities { get; set; }
+        public DbSet<PlayerGame> PlayerGames { get; set; }
+        public DbSet<OldTeam> OldTeams { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<Player> Players { get; set; }
+        public DbSet<PlayerCity> PlayerCities { get; set; }
+        public DbSet<PlayerPhoto> PlayerPhotos { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<Tournament> Tournaments { get; set; }
     }
 }

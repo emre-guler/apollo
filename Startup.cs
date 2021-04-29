@@ -1,7 +1,9 @@
+using Apollo.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +27,7 @@ namespace Apollo
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            services.AddDbContext<ApolloContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
