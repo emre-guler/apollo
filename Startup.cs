@@ -1,4 +1,5 @@
 using Apollo.Data;
+using Apollo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,7 +28,9 @@ namespace Apollo
             {
                 configuration.RootPath = "ClientApp/build";
             });
-            services.AddDbContext<ApolloContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
+            services.AddDbContext<ApolloContext>(options => options.UseSqlServer(
+                Configuration.GetConnectionString("DefaultConnectionString")))
+                    .AddScoped<PlayerService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
