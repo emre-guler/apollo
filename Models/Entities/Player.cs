@@ -24,6 +24,6 @@ namespace Apollo.Entities
         public bool IsVerifiedPlayer { get; set; }
         public bool IsMailVerified { get; set; }
         public bool IsPhoneNumberVerified { get; set; }
-        public DateTime BirthDay { get; set; }
+        public DateTime BirtDate { get; set; }
     }
 }
