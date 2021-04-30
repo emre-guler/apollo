@@ -12,7 +12,7 @@ namespace Apollo.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            // Özel veri girişi
+            
         }
 
         public DbSet<Achievement> Achievements { get; set; } 

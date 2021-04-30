@@ -6,7 +6,7 @@ namespace Apollo.Controllers
     [Route("[controller]")]
     public class HomeController : ControllerBase 
     {
-        [HttpGet("/sayfalar")]
+        [HttpGet("/")]
         public ActionResult Get()
         {
             return NoContent();

@@ -20,37 +20,32 @@ namespace Apollo.Services
 
         public bool PlayerRegisterFormDataControl(PlayerRegisterViewModel playerVM)
         {
+            playerVM.Name = playerVM.Name.Trim();
+            playerVM.Surname = playerVM.Surname.Trim();
+            playerVM.Nickname = playerVM.Nickname.Trim();
+            playerVM.PhoneNumber = playerVM.PhoneNumber.Trim();
+            playerVM.MailAddress = playerVM.MailAddress.Trim();
+            playerVM.Password = playerVM.Password.Trim();
+            playerVM.PasswordVerify = playerVM.PasswordVerify.Trim();
+            Regex regForMail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
+            Regex regForPhone = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
             if(
-                (playerVM.Name != null || playerVM.Name != "") &&
-                (playerVM.Surname.Trim() != null || playerVM.Surname.Trim() != "") &&
-                (playerVM.Nickname.Trim() != null || playerVM.Nickname.Trim() != "") &&
-                (playerVM.PhoneNumber.Trim() != null || playerVM.PhoneNumber.Trim() != "") &&
-                (playerVM.MailAddress.Trim() != null || playerVM.MailAddress.Trim() != "") &&
-                (playerVM.Password.Trim() != null || playerVM.Password.Trim() != "") &&
-                (playerVM.PasswordVerify.Trim() != null || playerVM.PasswordVerify.Trim() != "") &&
-                (playerVM.CityId != 0) &&
-                (playerVM.BirthDate != null)
+                (!String.IsNullOrEmpty(playerVM.Name)) &&
+                (!String.IsNullOrEmpty(playerVM.Surname)) &&
+                (!String.IsNullOrEmpty(playerVM.Nickname)) &&
+                (!String.IsNullOrEmpty(playerVM.PhoneNumber)) &&
+                (!String.IsNullOrEmpty(playerVM.MailAddress)) &&
+                (!String.IsNullOrEmpty(playerVM.Password)) &&
+                (!String.IsNullOrEmpty(playerVM.PasswordVerify)) &&
+                (playerVM.BirthDate != null) &&
+                (playerVM.Password == playerVM.PasswordVerify) && 
+                (playerVM.Password.Length >= 8) &&
+                (regForMail.Match(playerVM.MailAddress).Success) &&
+                (regForPhone.Match(playerVM.PhoneNumber).Success) && 
+                (playerVM.CityId != 0)
             )
             {
-                if(playerVM.Password.Trim() == playerVM.PasswordVerify.Trim() && playerVM.Password.Trim().Length >= 8)
-                {
-                    Regex regForMail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
-                    Regex regForPhone = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
-                    Match mailControl = regForMail.Match(playerVM.MailAddress);
-                    Match phoneControl = regForPhone.Match(playerVM.PhoneNumber);
-                    if(mailControl.Success && phoneControl.Success)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else 
-                {
-                    return false;
-                }
+                return true;
             }
             else
             {
@@ -60,12 +55,12 @@ namespace Apollo.Services
 
         public bool NewAccountControl(string mailAddress, string phoneNumber)
         {
-            var users = _db.Players
-                .FirstOrDefault(x => x.MailAddress == mailAddress.Trim() || x.PhoneNumber == phoneNumber.Trim());
-            if(users == null)
+            var userControl = _db.Players
+                .Any(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber);
+            if(userControl)
             {
                 return true;
-            }
+            }   
             else 
             {
                 return false;

@@ -49,9 +49,9 @@ namespace Apollo.Services
 
         public bool NewAccountControl(string mailAddress, string phoneNumber)
         {
-            var teams = _db.Teams
-                .FirstOrDefault(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber);
-            if(teams == null)
+            var teamControl = _db.Teams
+                .Any(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber);
+            if(teamControl)
             {
                 return true;
             }
@@ -67,8 +67,7 @@ namespace Apollo.Services
                 CreatedAt = DateTime.Now,
                 MailAddress = teamVM.MailAddress,
                 Password = BCrypt.Net.BCrypt.HashPassword(teamVM.Password),
-                PhoneNumber = teamVM.TeamName,
-                
+                PhoneNumber = teamVM.TeamName
             });
             _db.SaveChanges();
         }
