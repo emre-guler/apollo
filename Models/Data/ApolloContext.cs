@@ -25,5 +25,7 @@ namespace Apollo.Data
         public DbSet<PlayerPhoto> PlayerPhotos { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<Tournament> Tournaments { get; set; }
+        public DbSet<Video> Videos { get; set; }
+        public DbSet<PlayerVideo> PlayerVideos { get; set; }
     }
 }
