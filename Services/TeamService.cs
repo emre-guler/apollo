@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Apollo.Data;
 using Apollo.Entities;
@@ -19,33 +20,40 @@ namespace Apollo.Services
 
         public bool TeamRegisterFormDataControl(TeamRegisterViewModel teamVM)
         {
+            teamVM.TeamName = teamVM.TeamName.Trim();
+            teamVM.PhoneNumber = teamVM.PhoneNumber.Trim();
+            teamVM.Password = teamVM.Password.Trim();
+            teamVM.PasswordVerification = teamVM.PasswordVerification.Trim();
+            teamVM.MailAddress = teamVM.MailAddress.Trim();
+            Regex regForMail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
+            Regex regForPhone = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
             if(
-                (teamVM.TeamName.Trim() != null || teamVM.TeamName.Trim() != "") &&
-                (teamVM.PhoneNumber.Trim() != null || teamVM.PhoneNumber.Trim() != "") &&
-                (teamVM.Password.Trim() != null || teamVM.Password.Trim() != "") &&
-                (teamVM.PasswordVerification.Trim() != null || teamVM.PasswordVerification.Trim() != "") &&
-                (teamVM.MailAddress.Trim() != null || teamVM.MailAddress.Trim() != "")
+                (!String.IsNullOrEmpty(teamVM.TeamName)) &&
+                (!String.IsNullOrEmpty(teamVM.PhoneNumber)) &&
+                (!String.IsNullOrEmpty(teamVM.Password)) &&
+                (!String.IsNullOrEmpty(teamVM.PasswordVerification)) &&
+                (!String.IsNullOrEmpty(teamVM.MailAddress)) &&
+                (teamVM.Password == teamVM.PasswordVerification) &&
+                (teamVM.Password.Length >= 8) &&
+                (regForMail.Match(teamVM.MailAddress).Success) && 
+                (regForPhone.Match(teamVM.PhoneNumber).Success)
             )
             {
-                if(teamVM.Password.Trim() == teamVM.PasswordVerification.Trim() && teamVM.Password.Trim().Length >= 8)
-                {
-                    Regex regForMail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
-                    Regex regForPhone = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
-                    Match mailControl = regForMail.Match(teamVM.MailAddress);
-                    Match phoneControl = regForPhone.Match(teamVM.PhoneNumber);
-                    if(mailControl.Success && phoneControl.Success)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool NewAccountControl(string mailAddress, string phoneNumber)
+        {
+            var teams = _db.Teams
+                .FirstOrDefault(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber);
+            if(teams == null)
+            {
+                return true;
             }
             else
             {

@@ -28,8 +28,18 @@ namespace Apollo.Controllers
             bool controlResult = _teamService.TeamRegisterFormDataControl(teamVM);
             if(controlResult)
             {
-                _teamService.CreateTeam(teamVM);
-                return "true";
+                bool newUserControl = _teamService.NewAccountControl(teamVM.MailAddress, teamVM.PhoneNumber);
+                if(newUserControl)
+                {
+                    _teamService.CreateTeam(teamVM);
+                    return "true";
+                }
+                else
+                {
+                    ErrorModel errorModel = new ErrorModel("101", "Bu mail adresi veya telefon numarası daha önce kayıt edilmiş.");
+                    string jsonObject = JsonConvert.SerializeObject(errorModel);
+                    return jsonObject;
+                }
             }
             else
             {
