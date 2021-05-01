@@ -23,7 +23,7 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/team-register")]
-        public string TeamRegister(TeamRegisterViewModel teamVM)
+        public IActionResult TeamRegister(TeamRegisterViewModel teamVM)
         {
             bool controlResult = _teamService.TeamRegisterFormDataControl(teamVM);
             if(controlResult)
@@ -32,20 +32,20 @@ namespace Apollo.Controllers
                 if(newUserControl)
                 {
                     _teamService.CreateTeam(teamVM);
-                    return "true";
+                    return Ok(true);
                 }
                 else
                 {
                     ErrorModel errorModel = new ErrorModel("101", "Bu mail adresi veya telefon numarası daha önce kayıt edilmiş.");
                     string jsonObject = JsonConvert.SerializeObject(errorModel);
-                    return jsonObject;
+                    return Ok(jsonObject);
                 }
             }
             else
             {
                 ErrorModel errorModel = new ErrorModel("101", "Tüm alanlar doğru şekilde doldurulmalı.");
                 string jsonObject = JsonConvert.SerializeObject(errorModel);
-                return jsonObject;
+                return Ok(jsonObject);
             }
         }
     }

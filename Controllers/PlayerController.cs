@@ -25,7 +25,7 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/player-register")]
-        public string PlayerRegister(PlayerRegisterViewModel playerVM) 
+        public IActionResult PlayerRegister(PlayerRegisterViewModel playerVM) 
         {
             bool controlResult = _playerService.PlayerRegisterFormDataControl(playerVM);
             if(controlResult)
@@ -34,38 +34,38 @@ namespace Apollo.Controllers
                 if(newUserControl)
                 {
                     _playerService.CreatePlayer(playerVM);
-                    return "true";
+                    return Ok(true);
                 }
                 else 
                 {
                     ErrorModel errorModel = new ErrorModel("101", "Bu mail adresi veya telefon numarası daha önce kayıt edilmiş.");
                     string jsonObject = JsonConvert.SerializeObject(errorModel);
-                    return jsonObject;
+                    return Ok(jsonObject);
                 }
             }
             else 
             {
                 ErrorModel errorModel = new ErrorModel("100", "Tüm alanlar doğru şekilde doldurulmalı.");
                 string jsonObject = JsonConvert.SerializeObject(errorModel);
-                return jsonObject;
+                return Ok(jsonObject);
             }
         }
 
         [HttpPost("/player-login")]
-        public string PlayerLogin(PlayerLoginViewModel playerVM)
+        public IActionResult PlayerLogin(PlayerLoginViewModel playerVM)
         {
             Player userControl =  _playerService.PlayerLoginControl(playerVM);
             if(userControl != null)
             {
                PlayerViewModel allUserData =  _playerService.PlayerLogin(userControl);
                string jsonObject = JsonConvert.SerializeObject(allUserData);
-               return jsonObject;
+               return Ok(jsonObject);
             }
             else
             {
                 ErrorModel errorModel = new ErrorModel("102", "Böyle bir kullanıcı yok veya şifre yanlış.");
                 string jsonObject = JsonConvert.SerializeObject(errorModel);
-                return jsonObject;
+                return Ok(jsonObject);
             }
         }
     }

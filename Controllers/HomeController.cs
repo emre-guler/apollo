@@ -7,9 +7,9 @@ namespace Apollo.Controllers
     public class HomeController : ControllerBase 
     {
         [HttpGet("/")]
-        public ActionResult Get()
+        public IActionResult Get()
         {
-            return NoContent();
+            return Ok();
         }
     }
 }
