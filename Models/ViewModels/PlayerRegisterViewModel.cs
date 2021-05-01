@@ -1,4 +1,5 @@
 using System;
+using Apollo.Enums;
 
 namespace Apollo.ViewModels
 {
@@ -13,5 +14,6 @@ namespace Apollo.ViewModels
         public string PasswordVerify { get; set; }
         public int CityId { get; set; }
         public DateTime BirthDate { get; set; }
+        public Gender? Gender { get; set; }
     }
 }

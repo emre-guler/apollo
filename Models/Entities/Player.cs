@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Apollo.Enums;
 
 namespace Apollo.Entities 
 {
@@ -12,6 +13,7 @@ namespace Apollo.Entities
         public string MailAddress { get; set;}
         public string Password { get; set; }
         public string CVDescription { get; set; }
+        public Gender Gender { get; set; }
         public string TwitterContact { get; set; }
         public string FacebookContact { get; set; }
         public string YoutubeContact { get; set; }

@@ -42,7 +42,8 @@ namespace Apollo.Services
                 (playerVM.Password.Length >= 8) &&
                 (regForMail.Match(playerVM.MailAddress).Success) &&
                 (regForPhone.Match(playerVM.PhoneNumber).Success) && 
-                (playerVM.CityId != 0)
+                (playerVM.CityId != 0) &&
+                (playerVM.Gender != null)
             )
             {
                 return true;
@@ -78,7 +79,8 @@ namespace Apollo.Services
                 Password = BCrypt.Net.BCrypt.HashPassword(playerVM.Password),
                 PhoneNumber = playerVM.PhoneNumber,
                 Nickname = playerVM.Nickname,
-                Surname = playerVM.Surname
+                Surname = playerVM.Surname,
+                Gender = playerVM.Gender ?? Enums.Gender.Man
             });
             _db.SaveChanges();
         }
@@ -101,14 +103,8 @@ namespace Apollo.Services
 
         public PlayerViewModel PlayerLogin(Player player)
         {
-            string userTokenText = player.Id + player.Nickname + player.MailAddress + player.PhoneNumber + player.BirtDate.ToString();
-            PlayerViewModel playerData = new PlayerViewModel()
-            {
-                FullName = string.Format(@"{0} {1}", player.Name, player.Surname),
-                NickName = player.Nickname,
-                UserToken = BCrypt.Net.BCrypt.HashString(userTokenText)
-            };
-            return playerData;
+            PlayerViewModel pVM = new PlayerViewModel();
+            return pVM;
         }
     }
 }
