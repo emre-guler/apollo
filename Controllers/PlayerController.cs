@@ -40,14 +40,14 @@ namespace Apollo.Controllers
                 {
                     ErrorModel errorModel = new ErrorModel("101", "Bu mail adresi veya telefon numarası daha önce kayıt edilmiş.");
                     string jsonObject = JsonConvert.SerializeObject(errorModel);
-                    return Ok(jsonObject);
+                    return BadRequest(jsonObject);
                 }
             }
             else 
             {
                 ErrorModel errorModel = new ErrorModel("100", "Tüm alanlar doğru şekilde doldurulmalı.");
                 string jsonObject = JsonConvert.SerializeObject(errorModel);
-                return Ok(jsonObject);
+                return BadRequest(jsonObject);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Apollo.Controllers
             {
                 ErrorModel errorModel = new ErrorModel("102", "Böyle bir kullanıcı yok veya şifre yanlış.");
                 string jsonObject = JsonConvert.SerializeObject(errorModel);
-                return Ok(jsonObject);
+                return BadRequest(jsonObject);
             }
         }
     }
