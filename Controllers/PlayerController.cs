@@ -59,7 +59,7 @@ namespace Apollo.Controllers
             }
             else
             {
-                return BadRequest(error: new { errorCode = ErrorCode.CantFindUser });
+                return BadRequest(error: new { errorCode = ErrorCode.InvalidCredentials });
             }
         }
     }

@@ -4,6 +4,6 @@ namespace Apollo.Enums
     {
         UserExists = 100,
         MustBeFilled = 101,
-        CantFindUser = 102
+        InvalidCredentials = 102
     }
 }
