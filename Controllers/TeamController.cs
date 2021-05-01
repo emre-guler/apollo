@@ -1,5 +1,5 @@
 using Apollo.Data;
-using Apollo.Models;
+using Apollo.Enums;
 using Apollo.Services;
 using Apollo.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -36,16 +36,12 @@ namespace Apollo.Controllers
                 }
                 else
                 {
-                    ErrorModel errorModel = new ErrorModel("101", "Bu mail adresi veya telefon numarası daha önce kayıt edilmiş.");
-                    string jsonObject = JsonConvert.SerializeObject(errorModel);
-                    return BadRequest(jsonObject);
+                    return BadRequest(error: new { errorCode = ErrorCode.UserExists });
                 }
             }
             else
             {
-                ErrorModel errorModel = new ErrorModel("101", "Tüm alanlar doğru şekilde doldurulmalı.");
-                string jsonObject = JsonConvert.SerializeObject(errorModel);
-                return BadRequest(jsonObject);
+                return BadRequest(error: new { errorCode =  ErrorCode.MustBeFilled });
             }
         }
     }

@@ -87,18 +87,18 @@ namespace Apollo.Services
 
         public Player PlayerLoginControl(PlayerLoginViewModel playerVM)
         {
-            Player player =  _db.Players
+            if(!String.IsNullOrEmpty(playerVM.MailAddress) || !String.IsNullOrEmpty(playerVM.Password))
+            {
+                Player player =  _db.Players
                 .Where(x => x.MailAddress == playerVM.MailAddress)
                 .FirstOrDefault();
-            bool passwordControl = BCrypt.Net.BCrypt.Verify(playerVM.Password, player.Password);
-            if(player != null && passwordControl)
-            {
-                return player;
+                bool passwordControl = BCrypt.Net.BCrypt.Verify(playerVM.Password, player.Password);
+                if(player != null && passwordControl)
+                {
+                    return player;
+                }
             }
-            else 
-            {
-                return null;
-            }
+            return null;
         }
 
         public PlayerViewModel PlayerLogin(Player player)
