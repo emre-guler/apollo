@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Apollo.Data;
 using Apollo.Entities;
-using Apollo.ViewModelds;
+using Apollo.ViewModels;
 
 namespace Apollo.Services
 {
@@ -49,7 +49,7 @@ namespace Apollo.Services
 
         public bool NewAccountControl(string mailAddress, string phoneNumber)
         {
-            var teamControl = _db.Teams
+            bool teamControl = _db.Teams
                 .Any(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber);
             if(teamControl)
             {

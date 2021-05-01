@@ -1,9 +1,10 @@
-using Apollo.ViewModelds;
+using Apollo.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Apollo.Models;
 using Newtonsoft.Json;
 using Apollo.Services;
 using Apollo.Data;
+using Apollo.Entities;
 
 namespace Apollo.Controllers 
 {
@@ -45,6 +46,24 @@ namespace Apollo.Controllers
             else 
             {
                 ErrorModel errorModel = new ErrorModel("100", "Tüm alanlar doğru şekilde doldurulmalı.");
+                string jsonObject = JsonConvert.SerializeObject(errorModel);
+                return jsonObject;
+            }
+        }
+
+        [HttpPost("/player-login")]
+        public string PlayerLogin(PlayerLoginViewModel playerVM)
+        {
+            Player userControl =  _playerService.PlayerLoginControl(playerVM);
+            if(userControl != null)
+            {
+               PlayerViewModel allUserData =  _playerService.PlayerLogin(userControl);
+               string jsonObject = JsonConvert.SerializeObject(allUserData);
+               return jsonObject;
+            }
+            else
+            {
+                ErrorModel errorModel = new ErrorModel("102", "Böyle bir kullanıcı yok veya şifre yanlış.");
                 string jsonObject = JsonConvert.SerializeObject(errorModel);
                 return jsonObject;
             }

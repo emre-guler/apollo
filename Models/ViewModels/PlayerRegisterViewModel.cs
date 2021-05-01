@@ -1,6 +1,6 @@
 using System;
 
-namespace Apollo.ViewModelds
+namespace Apollo.ViewModels
 {
     public class PlayerRegisterViewModel 
     {

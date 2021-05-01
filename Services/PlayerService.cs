@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 using Apollo.Data;
-using Apollo.ViewModelds;
+using Apollo.ViewModels;
 using System.Linq;
 using Apollo.Entities;
 using System;
@@ -55,7 +55,7 @@ namespace Apollo.Services
 
         public bool NewAccountControl(string mailAddress, string phoneNumber)
         {
-            var userControl = _db.Players
+            bool userControl = _db.Players
                 .Any(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber);
             if(userControl)
             {
@@ -81,6 +81,34 @@ namespace Apollo.Services
                 Surname = playerVM.Surname
             });
             _db.SaveChanges();
+        }
+
+        public Player PlayerLoginControl(PlayerLoginViewModel playerVM)
+        {
+            Player player =  _db.Players
+                .Where(x => x.MailAddress == playerVM.MailAddress)
+                .FirstOrDefault();
+            bool passwordControl = BCrypt.Net.BCrypt.Verify(playerVM.Password, player.Password);
+            if(player != null && passwordControl)
+            {
+                return player;
+            }
+            else 
+            {
+                return null;
+            }
+        }
+
+        public PlayerViewModel PlayerLogin(Player player)
+        {
+            string userTokenText = player.Id + player.Nickname + player.MailAddress + player.PhoneNumber + player.BirtDate.ToString();
+            PlayerViewModel playerData = new PlayerViewModel()
+            {
+                FullName = string.Format(@"{0} {1}", player.Name, player.Surname),
+                NickName = player.Nickname,
+                UserToken = BCrypt.Net.BCrypt.HashString(userTokenText)
+            };
+            return playerData;
         }
     }
 }

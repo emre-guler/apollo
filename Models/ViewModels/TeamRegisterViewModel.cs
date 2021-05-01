@@ -1,4 +1,4 @@
-namespace Apollo.ViewModelds
+namespace Apollo.ViewModels
 {
     public class TeamRegisterViewModel
     {
