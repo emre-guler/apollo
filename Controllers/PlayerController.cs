@@ -5,6 +5,7 @@ using Apollo.Services;
 using Apollo.Data;
 using Apollo.Entities;
 using Apollo.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace Apollo.Controllers 
 {
@@ -52,10 +53,13 @@ namespace Apollo.Controllers
         {
             Player userControl =  _playerService.PlayerLoginControl(playerVM);
             if(userControl != null)
-            {
-               PlayerViewModel allUserData =  _playerService.PlayerLogin(userControl);
-               string jsonObject = JsonConvert.SerializeObject(allUserData);
-               return Ok(jsonObject);
+            { 
+                string userJWT = _playerService.PlayerLogin(userControl);
+                Response.Cookies.Append("apolloJWT", userJWT, new CookieOptions 
+                {
+                    HttpOnly = true
+                });
+                return Ok(true);
             }
             else
             {

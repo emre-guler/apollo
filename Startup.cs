@@ -31,7 +31,8 @@ namespace Apollo
             services.AddDbContext<ApolloContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnectionString")))
                     .AddScoped<PlayerService>()
-                    .AddScoped<TeamService>();
+                    .AddScoped<TeamService>()
+                    .AddScoped<AuthenticationService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

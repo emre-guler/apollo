@@ -10,12 +10,15 @@ namespace Apollo.Services
     public class PlayerService
     {
         readonly ApolloContext _db;
+        readonly AuthenticationService _authenticationService; 
 
         public PlayerService(
-            ApolloContext db
+            ApolloContext db,
+            AuthenticationService authenticationService
         )
         {
             _db = db;
+            _authenticationService = authenticationService;
         }
 
         public bool PlayerRegisterFormDataControl(PlayerRegisterViewModel playerVM)
@@ -101,10 +104,9 @@ namespace Apollo.Services
             return null;
         }
 
-        public PlayerViewModel PlayerLogin(Player player)
+        public string PlayerLogin(Player player)
         {
-            PlayerViewModel pVM = new PlayerViewModel();
-            return pVM;
+           return  _authenticationService.GenerateToken(player.Id);
         }
     }
 }
