@@ -15,14 +15,17 @@ namespace Apollo.Controllers
     {
         readonly ApolloContext _db;
         readonly PlayerService _playerService;
+        readonly AuthenticationService _authenticationService;
 
         public PlayerController(
             ApolloContext db,
-            PlayerService playerService
+            PlayerService playerService,
+            AuthenticationService authenticationService
         )
         {
             _db = db;
             _playerService = playerService;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost("/player-register")]
