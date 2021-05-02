@@ -1,10 +1,10 @@
 using Apollo.Data;
+using Apollo.Entities;
 using Apollo.Enums;
 using Apollo.Services;
 using Apollo.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-
 namespace Apollo.Controllers
 {
     [ApiController]
@@ -42,6 +42,25 @@ namespace Apollo.Controllers
             else
             {
                 return BadRequest(error: new { errorCode =  ErrorCode.MustBeFilled });
+            }
+        }
+
+        [HttpPost("/team-login")]
+        public IActionResult TeamLogin(LoginViewModel teamVM)
+        {
+            Team teamControl = _teamService.TeamLoginControl(teamVM);
+            if(teamControl != null)
+            {
+                string teamJWT = _teamService.TeamLogin(teamControl.Id);
+                Response.Cookies.Append("apolloJWT", teamJWT, new CookieOptions 
+                {
+                    HttpOnly = true
+                });
+                return Ok(true);
+            }
+            else
+            {
+                return BadRequest(error: new { errorCode = ErrorCode.InvalidCredentials });
             }
         }
     }

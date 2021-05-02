@@ -10,12 +10,15 @@ namespace Apollo.Services
     public class TeamService
     {
         readonly ApolloContext _db;
+        readonly AuthenticationService _authenticationService ;
 
         public TeamService(
-            ApolloContext db
+            ApolloContext db,
+            AuthenticationService authenticationService
         )
         {
             _db = db;
+            _authenticationService = authenticationService;
         }
 
         public bool TeamRegisterFormDataControl(TeamRegisterViewModel teamVM)
@@ -70,6 +73,27 @@ namespace Apollo.Services
                 PhoneNumber = teamVM.TeamName
             });
             _db.SaveChanges();
+        }
+
+        public Team TeamLoginControl(LoginViewModel teamVM)
+        {
+            if(!String.IsNullOrEmpty(teamVM.MailAddress) || !String.IsNullOrEmpty(teamVM.Password))
+            {
+                Team team = _db.Teams
+                    .Where(x => x.MailAddress == teamVM.MailAddress)
+                    .FirstOrDefault();
+                bool passwordControl = BCrypt.Net.BCrypt.Verify(teamVM.Password, team.Password);
+                if(team != null && passwordControl)
+                {
+                    return team;
+                }
+            }
+            return null;
+        }
+
+        public string TeamLogin(int teamId)
+        {
+            return _authenticationService.GenerateToken(teamId);
         }
     }
 }

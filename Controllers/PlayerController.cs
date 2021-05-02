@@ -49,12 +49,12 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/player-login")]
-        public IActionResult PlayerLogin(PlayerLoginViewModel playerVM)
+        public IActionResult PlayerLogin(LoginViewModel playerVM)
         {
             Player userControl =  _playerService.PlayerLoginControl(playerVM);
             if(userControl != null)
             { 
-                string userJWT = _playerService.PlayerLogin(userControl);
+                string userJWT = _playerService.PlayerLogin(userControl.Id);
                 Response.Cookies.Append("apolloJWT", userJWT, new CookieOptions 
                 {
                     HttpOnly = true

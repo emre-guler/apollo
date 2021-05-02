@@ -88,13 +88,13 @@ namespace Apollo.Services
             _db.SaveChanges();
         }
 
-        public Player PlayerLoginControl(PlayerLoginViewModel playerVM)
+        public Player PlayerLoginControl(LoginViewModel playerVM)
         {
             if(!String.IsNullOrEmpty(playerVM.MailAddress) || !String.IsNullOrEmpty(playerVM.Password))
             {
                 Player player =  _db.Players
-                .Where(x => x.MailAddress == playerVM.MailAddress)
-                .FirstOrDefault();
+                    .Where(x => x.MailAddress == playerVM.MailAddress)
+                    .FirstOrDefault();
                 bool passwordControl = BCrypt.Net.BCrypt.Verify(playerVM.Password, player.Password);
                 if(player != null && passwordControl)
                 {
@@ -104,9 +104,9 @@ namespace Apollo.Services
             return null;
         }
 
-        public string PlayerLogin(Player player)
+        public string PlayerLogin(int playerId)
         {
-           return  _authenticationService.GenerateToken(player.Id);
+           return  _authenticationService.GenerateToken(playerId);
         }
     }
 }
