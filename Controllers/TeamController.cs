@@ -63,5 +63,12 @@ namespace Apollo.Controllers
                 return BadRequest(error: new { errorCode = ErrorCode.InvalidCredentials });
             }
         }
+
+        [HttpPost("/team-logout")]
+        public IActionResult TeamLogout()
+        {
+            Response.Cookies.Delete("JWT");
+            return Ok(true);
+        }
     }
 }
