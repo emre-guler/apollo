@@ -35,7 +35,7 @@ namespace Apollo.Controllers
             if(controlResult)
             {
                 bool newUserControl = _playerService.NewAccountControl(playerVM.MailAddress, playerVM.PhoneNumber);
-                if(newUserControl)
+                if(!newUserControl)
                 {
                     _playerService.CreatePlayer(playerVM);
                     return Ok(true);

@@ -29,7 +29,7 @@ namespace Apollo.Controllers
             if(controlResult)
             {
                 bool newUserControl = _teamService.NewAccountControl(teamVM.MailAddress, teamVM.PhoneNumber);
-                if(newUserControl)
+                if(!newUserControl)
                 {
                     _teamService.CreateTeam(teamVM);
                     return Ok(true);

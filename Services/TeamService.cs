@@ -83,9 +83,12 @@ namespace Apollo.Services
                     .Where(x => x.MailAddress == teamVM.MailAddress)
                     .FirstOrDefault();
                 bool passwordControl = BCrypt.Net.BCrypt.Verify(teamVM.Password, team.Password);
-                if(team != null && passwordControl)
+                if(team != null)
                 {
-                    return team;
+                    if(passwordControl)
+                    {
+                        return team;
+                    }
                 }
             }
             return null;

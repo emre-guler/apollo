@@ -9,7 +9,7 @@ namespace Apollo.Controllers
         [HttpGet("/")]
         public IActionResult Get()
         {
-            return Ok();
+            return Ok("Welcome to the castle of Apollo Project! Do not try anythig!");
         }
     }
 }
