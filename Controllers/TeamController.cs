@@ -23,7 +23,7 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/team-register")]
-        public IActionResult TeamRegister(TeamRegisterViewModel teamVM)
+        public IActionResult TeamRegister([FromForm] TeamRegisterViewModel teamVM)
         {
             bool controlResult = _teamService.TeamRegisterFormDataControl(teamVM);
             if(controlResult)
@@ -46,7 +46,7 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/team-login")]
-        public IActionResult TeamLogin(LoginViewModel teamVM)
+        public IActionResult TeamLogin([FromForm] LoginViewModel teamVM)
         {
             Team teamControl = _teamService.TeamLoginControl(teamVM);
             if(teamControl != null)

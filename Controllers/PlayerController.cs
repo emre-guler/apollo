@@ -29,7 +29,7 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/player-register")]
-        public IActionResult PlayerRegister(PlayerRegisterViewModel playerVM) 
+        public IActionResult PlayerRegister([FromForm] PlayerRegisterViewModel playerVM) 
         {
             bool controlResult = _playerService.PlayerRegisterFormDataControl(playerVM);
             if(controlResult)
@@ -52,7 +52,7 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/player-login")]
-        public IActionResult PlayerLogin(LoginViewModel playerVM)
+        public IActionResult PlayerLogin([FromForm] LoginViewModel playerVM)
         {
             Player userControl =  _playerService.PlayerLoginControl(playerVM);
             if(userControl != null)
