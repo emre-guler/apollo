@@ -1,0 +1,101 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace Apollo.Migrations
+{
+    public partial class CitySeed_Added : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql(@"
+            INSERT INTO Cities (Name)
+            VALUES
+            (N'ADANA'),
+            (N'ADIYAMAN'),
+            (N'AFYON'),
+            (N'AĞRI'),
+            (N'AMASYA'),
+            (N'ANKARA'),
+            (N'ANTALYA'),
+            (N'ARTVİN'),
+            (N'AYDIN'),
+            (N'BALIKESİR'),
+            (N'BİLECİK'),
+            (N'BİNGÖL'),
+            (N'BİTLİS'),
+            (N'BOLU'),
+            (N'BURDUR'),
+            (N'BURSA'),
+            (N'ÇANAKKALE'),
+            (N'ÇANKIRI'),
+            (N'ÇORUM'),
+            (N'DENİZLİ'),
+            (N'DİYARBAKIR'),
+            (N'EDİRNE'),
+            (N'ELAZIĞ'),
+            (N'ERZİNCAN'),
+            (N'ERZURUM'),
+            (N'ESKİŞEHİR'),
+            (N'GAZİANTEP'),
+            (N'GİRESUN'),
+            (N'GÜMÜŞHANE'),
+            (N'HAKKARİ'),
+            (N'HATAY'),
+            (N'ISPARTA'),
+            (N'İÇEL'),
+            (N'İSTANBUL'),
+            (N'İZMİR'),
+            (N'KARS'),
+            (N'KASTAMONU'),
+            (N'KAYSERİ'),
+            (N'KIRKLARELİ'),
+            (N'KIRŞEHİR'),
+            (N'KOCAELİ'),
+            (N'KONYA'),
+            (N'KÜTAHYA'),
+            (N'MALATYA'),
+            (N'MANİSA'),
+            (N'KAHRAMANMARAŞ'),
+            (N'MARDİN'),
+            (N'MUĞLA'),
+            (N'MUŞ'),
+            (N'NEVŞEHİR'),
+            (N'NİĞDE'),
+            (N'ORDU'),
+            (N'RİZE'),
+            (N'SAKARYA'),
+            (N'SAMSUN'),
+            (N'SİİRT'),
+            (N'SİNOP'),
+            (N'SİVAS'),
+            (N'TEKİRDAĞ'),
+            (N'TOKAT'),
+            (N'TRABZON'),
+            (N'TUNCELİ'),
+            (N'ŞANLIURFA'),
+            (N'UŞAK'),
+            (N'VAN'),
+            (N'YOZGAT'),
+            (N'ZONGULDAK'),
+            (N'AKSARAY'),
+            (N'BAYBURT'),
+            (N'KARAMAN'),
+            (N'KIRIKKALE'),
+            (N'BATMAN'),
+            (N'ŞIRNAK'),
+            (N'BARTIN'),
+            (N'ARDAHAN'),
+            (N'IĞDIR'),
+            (N'YALOVA'),
+            (N'KARABÜK'),
+            (N'KİLİS'),
+            (N'OSMANİYE'),
+            (N'DÜZCE');
+            ");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+
+        }
+    }
+}
