@@ -67,7 +67,7 @@ namespace Apollo.Controllers
         [HttpPost("/team-logout")]
         public IActionResult TeamLogout()
         {
-            Response.Cookies.Delete("JWT");
+            Response.Cookies.Delete("apolloJWT");
             return Ok(true);
         }
     }

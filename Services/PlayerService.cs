@@ -40,7 +40,6 @@ namespace Apollo.Services
                 (!String.IsNullOrEmpty(playerVM.MailAddress)) &&
                 (!String.IsNullOrEmpty(playerVM.Password)) &&
                 (!String.IsNullOrEmpty(playerVM.PasswordVerify)) &&
-                (playerVM.BirthDate != null) &&
                 (playerVM.Password == playerVM.PasswordVerify) && 
                 (playerVM.Password.Length >= 8) &&
                 (regForMail.Match(playerVM.MailAddress).Success) &&
