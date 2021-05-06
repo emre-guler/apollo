@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
@@ -36,6 +37,16 @@ namespace Apollo.Services
             catch(Exception e) {
                 return false;
             }
+        }
+
+        public string GetId(string JWT)
+        {
+            var stream = JWT;  
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = jsonToken as JwtSecurityToken;
+            var jti = tokenS.Claims.First(claim => claim.Type == "jti").Value;
+            return jti;
         }
     }
 }

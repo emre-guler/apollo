@@ -116,8 +116,9 @@ namespace Apollo.Services
             return _authenticationService.VerfiyToken(JWT);
         }
 
-        public bool BuilUpYourProfile(PlayerBuildUpViewModel playerVM)
+        public bool BuilUpYourProfile(PlayerBuildUpViewModel playerVM, string userJWT)
         {
+            _authenticationService.GetId(userJWT);
             return true;
         }
     }

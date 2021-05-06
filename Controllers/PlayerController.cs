@@ -86,7 +86,7 @@ namespace Apollo.Controllers
                 bool control = _playerService.PlayerAuthenticator(userJWT);
                 if(control)
                 {
-                    _playerService.BuilUpYourProfile(playerVM);
+                    _playerService.BuilUpYourProfile(playerVM, userJWT);
                     return Ok(true);
                 }
                 else
