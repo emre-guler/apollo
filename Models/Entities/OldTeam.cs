@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Apollo.Enums;
 
@@ -9,10 +10,9 @@ namespace Apollo.Entities
         public int PlayerId { get; set; }
         public virtual Player Player { get; set; }
         public string TeamName { get; set; }
-        public int Duration { get; set; }
+        public DateTime StartedAt { get; set; }
+        public DateTime EndedAt { get; set; }
         public string Description { get; set; }
-        [ForeignKey("GameId")]
-        public int GameId { get; set; }
         public virtual Game Game { get; set;}
     }
 }

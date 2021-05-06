@@ -76,5 +76,28 @@ namespace Apollo.Controllers
             Response.Cookies.Delete("apolloJWT");
             return Ok(true);
         }
+
+        [HttpPost("/player-buildup-profile")]
+        public IActionResult PlayerBuildUpProfile([FromForm] PlayerBuildUpViewModel playerVM)
+        {
+            string userJWT = Request.Cookies["apolloJWT"];
+            if(!string.IsNullOrEmpty(userJWT))
+            {
+                bool control = _playerService.PlayerAuthenticator(userJWT);
+                if(control)
+                {
+                    _playerService.BuilUpYourProfile(playerVM);
+                    return Ok(true);
+                }
+                else
+                {
+                    return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
+                }
+            }
+            else
+            {
+                return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
+            }
+        }
     }
 }

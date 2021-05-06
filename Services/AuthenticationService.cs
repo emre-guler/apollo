@@ -19,17 +19,23 @@ namespace Apollo.Services
             return new JwtSecurityTokenHandler().WriteToken(securityToken);
         }
 
-        public JwtSecurityToken VerfiyToken(string JWT)
+        public bool VerfiyToken(string JWT)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenHandler = new JwtSecurityTokenHandler();   
             var key = Encoding.ASCII.GetBytes(secureKey);
-            tokenHandler.ValidateToken(JWT, new TokenValidationParameters
-            {
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-
-            }, out SecurityToken validatedToken);
-
-            return (JwtSecurityToken) validatedToken;
+            try {
+                tokenHandler.ValidateToken(JWT, new TokenValidationParameters
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                }, out SecurityToken validatedToken);
+                return true;
+            }
+            catch(Exception e) {
+                return false;
+            }
         }
     }
 }

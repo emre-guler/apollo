@@ -110,5 +110,15 @@ namespace Apollo.Services
         {
            return  _authenticationService.GenerateToken(playerId);
         }
+
+        public bool PlayerAuthenticator(string JWT)
+        {
+            return _authenticationService.VerfiyToken(JWT);
+        }
+
+        public bool BuilUpYourProfile(PlayerBuildUpViewModel playerVM)
+        {
+            return true;
+        }
     }
 }

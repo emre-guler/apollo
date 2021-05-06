@@ -4,6 +4,7 @@ namespace Apollo.Enums
     {
         UserExists = 100,
         MustBeFilled = 101,
-        InvalidCredentials = 102
+        InvalidCredentials = 102,
+        Unauthorized = 103
     }
 }
