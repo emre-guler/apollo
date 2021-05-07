@@ -35,6 +35,7 @@ namespace Apollo.Services
                 return true;
             }
             catch(Exception e) {
+                Console.WriteLine(e.Data); // Gereksiz kod, hata atmasın diye sadece.
                 return false;
             }
         }
