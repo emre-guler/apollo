@@ -62,18 +62,20 @@ namespace Apollo.Controllers
                 {
                     HttpOnly = true
                 });
+                Response.Cookies.Append("apolloPlayerId", userControl.Id.ToString(), new CookieOptions 
+                {
+                    HttpOnly = true
+                });
                 return Ok(true);
             }
-            else
-            {
-                return BadRequest(error: new { errorCode = ErrorCode.InvalidCredentials });
-            }
+            return BadRequest(error: new { errorCode = ErrorCode.InvalidCredentials });
         }
 
         [HttpPost("/player-logout")]
         public IActionResult PlayerLogout()
         {
             Response.Cookies.Delete("apolloJWT");
+            Response.Cookies.Delete("apolloPlayerId");
             return Ok(true);
         }
 
@@ -81,23 +83,20 @@ namespace Apollo.Controllers
         public IActionResult PlayerBuildUpProfile([FromForm] PlayerBuildUpViewModel playerVM)
         {
             string userJWT = Request.Cookies["apolloJWT"];
-            if(!string.IsNullOrEmpty(userJWT))
+            string userId = Request.Cookies["apolloPlayerId"];
+            if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
             {
                 bool control = _playerService.PlayerAuthenticator(userJWT);
                 if(control)
                 {
-                    _playerService.BuilUpYourProfile(playerVM, userJWT);
-                    return Ok(true);
-                }
-                else
-                {
-                    return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
+                    bool result = _playerService.BuilUpYourProfile(playerVM, userJWT, userId);
+                    if(result)
+                    {
+                        return Ok(true);
+                    }
                 }
             }
-            else
-            {
-                return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
-            }
+            return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
         }
     }
 }

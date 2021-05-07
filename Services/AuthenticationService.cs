@@ -38,15 +38,5 @@ namespace Apollo.Services
                 return false;
             }
         }
-
-        public string GetId(string JWT)
-        {
-            var stream = JWT;  
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(stream);
-            var tokenS = jsonToken as JwtSecurityToken;
-            var jti = tokenS.Claims.First(claim => claim.Type == "jti").Value;
-            return jti;
-        }
     }
 }
