@@ -32,7 +32,8 @@ namespace Apollo
                 Configuration.GetConnectionString("DefaultConnectionString")))
                     .AddScoped<PlayerService>()
                     .AddScoped<TeamService>()
-                    .AddScoped<AuthenticationService>();
+                    .AddScoped<AuthenticationService>()
+                    .AddScoped<MailService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

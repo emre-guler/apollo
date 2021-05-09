@@ -12,13 +12,16 @@ namespace Apollo.Services
         readonly ApolloContext _db;
         readonly AuthenticationService _authenticationService ;
 
+        readonly MailService _mailService;
         public TeamService(
             ApolloContext db,
-            AuthenticationService authenticationService
+            AuthenticationService authenticationService,
+            MailService mailService
         )
         {
             _db = db;
             _authenticationService = authenticationService;
+            _mailService = mailService;
         }
 
         public bool TeamRegisterFormDataControl(TeamRegisterViewModel teamVM)
@@ -73,6 +76,7 @@ namespace Apollo.Services
                 PhoneNumber = teamVM.TeamName
             });
             _db.SaveChanges();
+            _mailService.teamWelcomeMail(teamVM.MailAddress);
         }
 
         public Team TeamLoginControl(LoginViewModel teamVM)

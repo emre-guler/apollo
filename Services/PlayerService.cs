@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using Apollo.Data;
 using Apollo.ViewModels;
 using System.Linq;
+using Apollo.Services;
 using Apollo.Entities;
 using System;
 using System.IO;
@@ -15,13 +16,17 @@ namespace Apollo.Services
         readonly ApolloContext _db;
         readonly AuthenticationService _authenticationService; 
 
+        readonly MailService _mailService;
+
         public PlayerService(
             ApolloContext db,
-            AuthenticationService authenticationService
+            AuthenticationService authenticationService,
+            MailService mailService
         )
         {
             _db = db;
             _authenticationService = authenticationService;
+            _mailService = mailService;
         }
 
         public bool PlayerRegisterFormDataControl(PlayerRegisterViewModel playerVM)
@@ -88,8 +93,9 @@ namespace Apollo.Services
                 Gender = playerVM.Gender ?? Enums.Gender.Man
             });
             _db.SaveChanges();
+            _mailService.playerWelcomeMail(playerVM.MailAddress);
         }
-
+        
         public Player PlayerLoginControl(LoginViewModel playerVM)
         {
             if(!String.IsNullOrEmpty(playerVM.MailAddress) || !String.IsNullOrEmpty(playerVM.Password))
