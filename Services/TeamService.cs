@@ -26,10 +26,18 @@ namespace Apollo.Services
 
         public bool TeamRegisterFormDataControl(TeamRegisterViewModel teamVM)
         {
-            teamVM.TeamName = teamVM.TeamName.Trim();
-            teamVM.PhoneNumber = teamVM.PhoneNumber.Trim();
-            teamVM.Password = teamVM.Password.Trim();
-            teamVM.MailAddress = teamVM.MailAddress.Trim();
+            try
+            {
+                teamVM.TeamName = teamVM.TeamName.Trim();
+                teamVM.PhoneNumber = teamVM.PhoneNumber.Trim();
+                teamVM.Password = teamVM.Password.Trim();
+                teamVM.MailAddress = teamVM.MailAddress.Trim();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Data);
+                return false;
+            }
             Regex regForMail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
             Regex regForPhone = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
             if(

@@ -31,12 +31,19 @@ namespace Apollo.Services
 
         public bool PlayerRegisterFormDataControl(PlayerRegisterViewModel playerVM)
         {
-            playerVM.Name = playerVM.Name.Trim();
-            playerVM.Surname = playerVM.Surname.Trim();
-            playerVM.Nickname = playerVM.Nickname.Trim();
-            playerVM.PhoneNumber = playerVM.PhoneNumber.Trim();
-            playerVM.MailAddress = playerVM.MailAddress.Trim();
-            playerVM.Password = playerVM.Password.Trim();
+            try {
+                playerVM.Name = playerVM.Name.Trim();
+                playerVM.Surname = playerVM.Surname.Trim();
+                playerVM.Nickname = playerVM.Nickname.Trim();
+                playerVM.PhoneNumber = playerVM.PhoneNumber.Trim();
+                playerVM.MailAddress = playerVM.MailAddress.Trim();
+                playerVM.Password = playerVM.Password.Trim();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Data);
+                return false;
+            }
             Regex regForMail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
             Regex regForPhone = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
             if(
@@ -145,10 +152,10 @@ namespace Apollo.Services
                     };
                     _db.Photos.Add(newProfilePhoto);
                     _db.SaveChanges();
-                    playerData.ProfilePhotoId = newProfilePhoto.Id;
                     playerData.TwitterContact = playerVM.TwitterContact.Trim();
                     playerData.FacebookContact = playerVM.FacebookContact.Trim();
                     playerData.YoutubeContact = playerVM.YoutubeContact.Trim();
+                    playerData.ProfilePhotoId = newProfilePhoto.Id;
                     playerData.SalaryException = playerVM.SalaryException;
                     playerData.IsActiveForTeam = playerVM.IsActiveForTeam;
                     foreach(var cityId in playerVM.AvailableCities)
