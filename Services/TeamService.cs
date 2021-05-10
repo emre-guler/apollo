@@ -29,7 +29,6 @@ namespace Apollo.Services
             teamVM.TeamName = teamVM.TeamName.Trim();
             teamVM.PhoneNumber = teamVM.PhoneNumber.Trim();
             teamVM.Password = teamVM.Password.Trim();
-            teamVM.PasswordVerification = teamVM.PasswordVerification.Trim();
             teamVM.MailAddress = teamVM.MailAddress.Trim();
             Regex regForMail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
             Regex regForPhone = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
@@ -37,9 +36,7 @@ namespace Apollo.Services
                 (!String.IsNullOrEmpty(teamVM.TeamName)) &&
                 (!String.IsNullOrEmpty(teamVM.PhoneNumber)) &&
                 (!String.IsNullOrEmpty(teamVM.Password)) &&
-                (!String.IsNullOrEmpty(teamVM.PasswordVerification)) &&
                 (!String.IsNullOrEmpty(teamVM.MailAddress)) &&
-                (teamVM.Password == teamVM.PasswordVerification) &&
                 (teamVM.Password.Length >= 8) &&
                 (regForMail.Match(teamVM.MailAddress).Success) && 
                 (regForPhone.Match(teamVM.PhoneNumber).Success)

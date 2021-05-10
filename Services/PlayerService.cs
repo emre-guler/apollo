@@ -37,7 +37,6 @@ namespace Apollo.Services
             playerVM.PhoneNumber = playerVM.PhoneNumber.Trim();
             playerVM.MailAddress = playerVM.MailAddress.Trim();
             playerVM.Password = playerVM.Password.Trim();
-            playerVM.PasswordVerify = playerVM.PasswordVerify.Trim();
             Regex regForMail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
             Regex regForPhone = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
             if(
@@ -47,8 +46,6 @@ namespace Apollo.Services
                 (!String.IsNullOrEmpty(playerVM.PhoneNumber)) &&
                 (!String.IsNullOrEmpty(playerVM.MailAddress)) &&
                 (!String.IsNullOrEmpty(playerVM.Password)) &&
-                (!String.IsNullOrEmpty(playerVM.PasswordVerify)) &&
-                (playerVM.Password == playerVM.PasswordVerify) && 
                 (playerVM.Password.Length >= 8) &&
                 (regForMail.Match(playerVM.MailAddress).Success) &&
                 (regForPhone.Match(playerVM.PhoneNumber).Success) && 
