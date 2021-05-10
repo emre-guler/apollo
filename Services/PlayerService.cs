@@ -139,7 +139,7 @@ namespace Apollo.Services
                 
                 if(playerData != null)
                 {
-                    string profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image", playerVM.ProfilePhoto.FileName);
+                    string profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/player", playerVM.ProfilePhoto.FileName);
                     using (Stream stream = new FileStream(profilePhotoPath, FileMode.Create))
                     {
                         playerVM.ProfilePhoto.CopyTo(stream);
@@ -178,7 +178,7 @@ namespace Apollo.Services
                     _db.SaveChanges();
                     foreach(var image in playerVM.UserPhotos)
                     {
-                        string photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image", image.FileName);
+                        string photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/player", image.FileName);
                         using(Stream stream = new FileStream(photoPath, FileMode.Create))
                         {
                             image.CopyTo(stream);

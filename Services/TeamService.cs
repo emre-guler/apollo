@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Apollo.Data;
@@ -74,12 +75,18 @@ namespace Apollo.Services
 
         public void CreateTeam(TeamRegisterViewModel teamVM)
         {
+            string profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/team", teamVM.ProfilePhoto.FileName);
+            using(Stream stream = new FileStream(profilePhotoPath, FileMode.Create))
+            {
+                teamVM.ProfilePhoto.CopyTo(stream);
+            };
             _db.Teams.Add(new Team {
                 TeamName = teamVM.TeamName,
                 CreatedAt = DateTime.Now,
                 MailAddress = teamVM.MailAddress,
                 Password = BCrypt.Net.BCrypt.HashPassword(teamVM.Password),
-                PhoneNumber = teamVM.TeamName
+                PhoneNumber = teamVM.TeamName,
+                ProfilePhotoPath = profilePhotoPath
             });
             _db.SaveChanges();
             _mailService.TeamWelcomeMail(teamVM.MailAddress);
