@@ -9,8 +9,8 @@ namespace Apollo.Services
 {
     public class TeamService
     {
-        readonly ApolloContext _db;
-        readonly AuthenticationService _authenticationService ;
+        private readonly ApolloContext _db;
+        private readonly AuthenticationService _authenticationService ;
 
         readonly MailService _mailService;
         public TeamService(
