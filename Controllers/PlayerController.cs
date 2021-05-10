@@ -6,6 +6,7 @@ using Apollo.Data;
 using Apollo.Entities;
 using Apollo.Enums;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Apollo.Controllers 
 {
@@ -86,7 +87,7 @@ namespace Apollo.Controllers
             string userId = Request.Cookies["apolloPlayerId"];
             if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
             {
-                bool control = _playerService.PlayerAuthenticator(userJWT);
+                bool control = _playerService.PlayerAuthenticator(userJWT, Int16.Parse(userId));
                 if(control)
                 {
                     bool result = _playerService.BuilUpYourProfile(playerVM, userJWT, userId);
