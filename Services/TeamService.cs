@@ -81,7 +81,7 @@ namespace Apollo.Services
                 PhoneNumber = teamVM.TeamName
             });
             _db.SaveChanges();
-            _mailService.teamWelcomeMail(teamVM.MailAddress);
+            _mailService.TeamWelcomeMail(teamVM.MailAddress);
         }
 
         public Team TeamLoginControl(LoginViewModel teamVM)

@@ -97,7 +97,7 @@ namespace Apollo.Services
                 Gender = playerVM.Gender ?? Enums.Gender.Man
             });
             _db.SaveChanges();
-            _mailService.playerWelcomeMail(playerVM.MailAddress);
+            _mailService.PlayerWelcomeMail(playerVM.MailAddress);
         }
         
         public Player PlayerLoginControl(LoginViewModel playerVM)

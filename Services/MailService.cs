@@ -9,32 +9,42 @@ namespace Apollo.Services
         private int mailServerPort = 587;
         private string mailServerHost = "smtp.live.com";
         private bool mailServerSSL = true;
-        public void playerWelcomeMail(string playerMailAddress)
+        public void PlayerWelcomeMail(string playerMailAddress)
         {
-            MailMessage message = new MailMessage();
-            SmtpClient mailServer = new SmtpClient();
-            mailServer.Credentials = new System.Net.NetworkCredential(senderMailAddress , senderMailPass);
-            mailServer.Port = mailServerPort;
-            mailServer.Host = mailServerHost; 
-            mailServer.EnableSsl= mailServerSSL;
+            MailMessage message = new MailMessage()
+            {
+                From = new MailAddress(senderMailAddress),
+                Subject = "Welcome / Hoşgeldiniz",
+                Body = "Deneme"
+            };
+            SmtpClient mailServer = new SmtpClient()
+            {
+                Credentials = new System.Net.NetworkCredential(senderMailAddress , senderMailPass),
+                Port = mailServerPort,
+                Host = mailServerHost,
+                EnableSsl = mailServerSSL
+            };
+
             message.To.Add(playerMailAddress);
-            message.From = new MailAddress("softwareionicc@hotmail.com");
-            message.Subject = "Welcome/Hoşgeldiniz";
-            message.Body = "deneme";
             mailServer.Send(message);
         }
-        public void teamWelcomeMail(string teamMailAddress)
+        public void TeamWelcomeMail(string teamMailAddress)
         {
-            MailMessage message = new MailMessage();
-            SmtpClient mailServer = new SmtpClient();
-            mailServer.Credentials = new System.Net.NetworkCredential(senderMailAddress , senderMailPass);
-            mailServer.Port = mailServerPort;
-            mailServer.Host = mailServerHost; 
-            mailServer.EnableSsl= mailServerSSL;
+            MailMessage message = new MailMessage()
+            {
+                From = new MailAddress(senderMailAddress),
+                Subject = "Welcome / Hoşgeldiniz",
+                Body = "Deneme mailidir."
+            };
+            SmtpClient mailServer = new SmtpClient()
+            {
+                Credentials = new System.Net.NetworkCredential(senderMailAddress , senderMailPass),
+                Port = mailServerPort,
+                Host = mailServerHost,
+                EnableSsl = mailServerSSL
+            };
+            
             message.To.Add(teamMailAddress);
-            message.From = new MailAddress("softwareionicc@hotmail.com");
-            message.Subject = "Takım olarak hoşgeliniz";
-            message.Body = "göt oğuz";
             mailServer.Send(message);
         }
     }
