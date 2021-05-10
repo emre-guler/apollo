@@ -75,6 +75,7 @@ namespace Apollo.Services
         public void CreateTeam(TeamRegisterViewModel teamVM)
         {
             _db.Teams.Add(new Team {
+                TeamName = teamVM.TeamName,
                 CreatedAt = DateTime.Now,
                 MailAddress = teamVM.MailAddress,
                 Password = BCrypt.Net.BCrypt.HashPassword(teamVM.Password),
