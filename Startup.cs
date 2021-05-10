@@ -33,7 +33,8 @@ namespace Apollo
                     .AddScoped<PlayerService>()
                     .AddScoped<TeamService>()
                     .AddScoped<AuthenticationService>()
-                    .AddScoped<MailService>();
+                    .AddScoped<MailService>()
+                    .AddScoped<GeneralMethodService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

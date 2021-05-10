@@ -99,5 +99,40 @@ namespace Apollo.Controllers
             }
             return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
         }
+
+        [HttpGet("/player-mail-verification")]
+        public IActionResult PlayerMailVerificationRequest()
+        {
+            string userJWT = Request.Cookies["apolloJWT"];
+            string userId = Request.Cookies["apolloPlayerId"];
+            if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
+            {
+                bool control = _playerService.PlayerAuthenticator(userJWT, Int16.Parse(userId));
+                if(control)
+                {
+                    bool verifyControl = _playerService.PlayerMailVerificationControl(Int16.Parse(userId));
+                    if(verifyControl)
+                    {
+                        _playerService.SendMailVerification(Int16.Parse(userId));
+                        return Ok(true);
+                    }
+                }
+            }
+            return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
+        }
+
+        [HttpPost("/verification/{hashedData}")]
+        public IActionResult PlayerMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
+        {
+            bool confirm = _playerService.PlayerControlMailConfirmation(confirmationCode, hashedData);
+            if(confirm)
+            {
+                return Ok(true);
+            }   
+            else
+            {
+                return BadRequest(error : new { erroCode = ErrorCode.InvalidCredentials });
+            }
+        }
     }
 }

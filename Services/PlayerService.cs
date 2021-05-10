@@ -8,24 +8,29 @@ using System;
 using System.IO;
 using Microsoft.Extensions.Hosting.Internal;
 using System.Collections.Generic;
+using Apollo.Enums;
 
 namespace Apollo.Services 
 {
     public class PlayerService
     {
+        private string webSiteUrl = "http://localhost:5001/";
         private readonly ApolloContext _db;
         private readonly AuthenticationService _authenticationService; 
         private readonly MailService _mailService;
+        private readonly GeneralMethodService _methodService;
 
         public PlayerService(
             ApolloContext db,
             AuthenticationService authenticationService,
-            MailService mailService
+            MailService mailService,
+            GeneralMethodService methodService
         )
         {
             _db = db;
             _authenticationService = authenticationService;
             _mailService = mailService;
+            _methodService = methodService;
         }
 
         public bool PlayerRegisterFormDataControl(PlayerRegisterViewModel playerVM)
@@ -255,6 +260,55 @@ namespace Apollo.Services
                 }
             }
             return false;
+        }
+
+        public bool PlayerMailVerificationControl(int userId)
+        {
+            return _db.Players.Any(x => !x.DeletedAt.HasValue && !x.IsMailVerified && x.Id == userId);
+        }
+
+        public void SendMailVerification(int userId)
+        {
+            Player playerData = _db.Players
+                .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == userId);
+
+            int confirmationCode = new Random().Next(100000, 999999);
+            string url = _methodService.GenerateRandomString();            
+            webSiteUrl = webSiteUrl + url;
+            _mailService.PlayerSendMailVerification(confirmationCode, webSiteUrl, playerData.MailAddress);
+            _db.VerificationRequests.Add(new VerificationRequest {
+                UserType = UserType.Player,
+                UserId = playerData.Id,
+                URL = url,
+                CreatedAt = DateTime.Now,
+                ConfirmationCode = confirmationCode
+            });
+            _db.SaveChanges();
+        }
+
+        public bool PlayerControlMailConfirmation(int confirmationCode, string hashedData)
+        {
+            var verification = _db.VerificationRequests
+                .LastOrDefault(
+                    x => !x.DeletedAt.HasValue && 
+                    x.CreatedAt.Value.AddHours(1) >  DateTime.Now &&
+                    x.ConfirmationCode == confirmationCode &&
+                    x.URL == hashedData &&
+                    x.UserType == UserType.Player
+                );
+            if(verification != null)
+            {
+                verification.DeletedAt = DateTime.Now;
+                Player playerData = _db.Players.FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == verification.UserId);
+                playerData.IsMailVerified = true;
+                _db.SaveChanges();
+                
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -1,4 +1,8 @@
+using System.Net;
 using System.Net.Mail;
+using Apollo.Data;
+using Apollo.Entities;
+using Apollo.Enums;
 
 namespace Apollo.Services
 {
@@ -19,7 +23,7 @@ namespace Apollo.Services
             };
             SmtpClient mailServer = new SmtpClient()
             {
-                Credentials = new System.Net.NetworkCredential(senderMailAddress , senderMailPass),
+                Credentials = new NetworkCredential(senderMailAddress , senderMailPass),
                 Port = mailServerPort,
                 Host = mailServerHost,
                 EnableSsl = mailServerSSL
@@ -38,13 +42,33 @@ namespace Apollo.Services
             };
             SmtpClient mailServer = new SmtpClient()
             {
-                Credentials = new System.Net.NetworkCredential(senderMailAddress , senderMailPass),
+                Credentials = new NetworkCredential(senderMailAddress , senderMailPass),
                 Port = mailServerPort,
                 Host = mailServerHost,
                 EnableSsl = mailServerSSL
             };
             
             message.To.Add(teamMailAddress);
+            mailServer.Send(message);
+        }
+
+        public void PlayerSendMailVerification(int confirmationCode, string url, string playerMailAddress)
+        {
+            MailMessage message = new MailMessage()
+            {
+                From = new MailAddress(senderMailAddress),
+                Subject = "Onaylama Maili",
+                Body = string.Format("<a href='{0}'>Link'e git.</a> Onaylama Kodunuz: {1}", url, confirmationCode)
+            };
+            SmtpClient mailServer = new SmtpClient()
+            {
+                Credentials = new NetworkCredential(senderMailAddress, senderMailPass),
+                Port = mailServerPort,
+                Host = mailServerHost,
+                EnableSsl = mailServerSSL
+            };
+
+            message.To.Add(playerMailAddress);
             mailServer.Send(message);
         }
     }
