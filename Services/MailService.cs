@@ -1,8 +1,7 @@
 using System.Net;
 using System.Net.Mail;
-using Apollo.Data;
+using System.Threading.Tasks;
 using Apollo.Entities;
-using Apollo.Enums;
 
 namespace Apollo.Services
 {
@@ -13,13 +12,23 @@ namespace Apollo.Services
         private int mailServerPort = 587;
         private string mailServerHost = "smtp.live.com";
         private bool mailServerSSL = true;
-        public void PlayerWelcomeMail(string playerMailAddress)
+        private readonly ViewRenderService _viewRenderService;
+
+        public MailService(
+            ViewRenderService viewRenderService
+        )
         {
+            _viewRenderService = viewRenderService;
+        }
+
+        public async Task PlayerWelcomeMail(string playerMailAddress)
+        {
+            var bodyResult = await _viewRenderService.RenderToStringAsync("~/Views/Mailing/PlayerWelcomeMail.cshtml", new Player());
             MailMessage message = new()
             {
                 From = new MailAddress(senderMailAddress),
                 Subject = "Welcome / Hoşgeldiniz",
-                Body = "Deneme"
+                Body = bodyResult
             };
             SmtpClient mailServer = new()
             {
@@ -32,13 +41,14 @@ namespace Apollo.Services
             message.To.Add(playerMailAddress);
             mailServer.Send(message);
         }
-        public void TeamWelcomeMail(string teamMailAddress)
+        public async Task TeamWelcomeMail(string teamMailAddress)
         {
+            var bodyResult = await _viewRenderService.RenderToStringAsync("~/Views/Mailing/TeamWelcomeMail.cshtml", new Team());
             MailMessage message = new()
             {
                 From = new MailAddress(senderMailAddress),
                 Subject = "Welcome / Hoşgeldiniz",
-                Body = "Deneme mailidir."
+                Body = bodyResult
             };
             SmtpClient mailServer = new()
             {
@@ -52,13 +62,14 @@ namespace Apollo.Services
             mailServer.Send(message);
         }
 
-        public void UserSendMailVerification(int confirmationCode, string url, string userMailAdress)
+        public async Task UserSendMailVerification(int confirmationCode, string url, string userMailAdress)
         {
+            var bodyResult = await _viewRenderService.RenderToStringAsync("~/Views/Mailing/UserWelcomeMail.cshtml", new object());
             MailMessage message = new()
             {
                 From = new MailAddress(senderMailAddress),
                 Subject = "Onaylama Maili",
-                Body = string.Format("<a href='{0}'>Link'e git.</a> Onaylama Kodunuz: {1}", url, confirmationCode)
+                Body = bodyResult
             };
             SmtpClient mailServer = new()
             {
