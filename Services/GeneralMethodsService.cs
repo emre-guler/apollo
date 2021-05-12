@@ -4,13 +4,13 @@ using Apollo.Data;
 
 namespace Apollo.Services
 {
-    public class GeneralMethodService
+    public class GeneralMethodsService
     {
         private int stringLen = 30;
         private string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         private static Random random = new Random();
         private readonly ApolloContext _db;
-        public GeneralMethodService(
+        public GeneralMethodsService(
             ApolloContext db
         )
         {

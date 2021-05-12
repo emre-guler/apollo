@@ -18,13 +18,13 @@ namespace Apollo.Services
         private readonly ApolloContext _db;
         private readonly AuthenticationService _authenticationService; 
         private readonly MailService _mailService;
-        private readonly GeneralMethodService _methodService;
+        private readonly GeneralMethodsService _methodService;
 
         public PlayerService(
             ApolloContext db,
             AuthenticationService authenticationService,
             MailService mailService,
-            GeneralMethodService methodService
+            GeneralMethodsService methodService
         )
         {
             _db = db;
