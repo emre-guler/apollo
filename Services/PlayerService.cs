@@ -48,8 +48,8 @@ namespace Apollo.Services
                 Console.WriteLine(e.Data);
                 return false;
             }
-            Regex regForMail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
-            Regex regForPhone = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
+            Regex regForMail = new(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
+            Regex regForPhone = new(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
             if(
                 (!String.IsNullOrEmpty(playerVM.Name)) &&
                 (!String.IsNullOrEmpty(playerVM.Surname)) &&
@@ -111,7 +111,7 @@ namespace Apollo.Services
                 Player player =  _db.Players
                     .Where(x => x.MailAddress == playerVM.MailAddress && !x.DeletedAt.HasValue)
                     .FirstOrDefault();
-                if(player != null)
+                if(player is not null)
                 {
                     bool passwordControl = BCrypt.Net.BCrypt.Verify(playerVM.Password, player.Password);
                     if(passwordControl)
@@ -150,14 +150,14 @@ namespace Apollo.Services
                 Player playerData = _db.Players
                     .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == id);
                 
-                if(playerData != null)
+                if(playerData is not null)
                 {
                     string profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/player", playerVM.ProfilePhoto.FileName);
                     using (Stream stream = new FileStream(profilePhotoPath, FileMode.Create))
                     {
                         playerVM.ProfilePhoto.CopyTo(stream);
                     };
-                    Photo newProfilePhoto = new Photo()
+                    Photo newProfilePhoto = new()
                     {
                         PhotoPath = profilePhotoPath,
                         CreatedAt = DateTime.Now
@@ -217,7 +217,7 @@ namespace Apollo.Services
                         {
                             video.CopyTo(stream);
                         }
-                        Video newVideo = new Video
+                        Video newVideo = new()
                         {
                             VideoPath = videoPath,
                             CreatedAt = DateTime.Now
@@ -296,7 +296,7 @@ namespace Apollo.Services
                     x.URL == hashedData &&
                     x.UserType == UserType.Player
                 );
-            if(verification != null)
+            if(verification is not null)
             {
                 verification.DeletedAt = DateTime.Now;
                 Player playerData = _db.Players.FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == verification.UserId);

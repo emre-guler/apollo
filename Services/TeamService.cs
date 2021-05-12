@@ -43,8 +43,8 @@ namespace Apollo.Services
                 Console.WriteLine(e.Data);
                 return false;
             }
-            Regex regForMail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
-            Regex regForPhone = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
+            Regex regForMail = new(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
+            Regex regForPhone = new(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
             if(
                 (!String.IsNullOrEmpty(teamVM.TeamName)) &&
                 (!String.IsNullOrEmpty(teamVM.PhoneNumber)) &&
@@ -104,7 +104,7 @@ namespace Apollo.Services
                     .Where(x => x.MailAddress == teamVM.MailAddress)
                     .FirstOrDefault();
                 bool passwordControl = BCrypt.Net.BCrypt.Verify(teamVM.Password, team.Password);
-                if(team != null && passwordControl)
+                if(team is not null && passwordControl)
                 {
                     return team;
                 }
@@ -163,7 +163,7 @@ namespace Apollo.Services
                     x.URL == hashedData &&
                     x.UserType == UserType.Team
                 );
-            if(verification != null)
+            if(verification is not null)
             {
                 verification.DeletedAt = DateTime.Now;
                 Team teamData = _db.Teams.FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == verification.UserId);

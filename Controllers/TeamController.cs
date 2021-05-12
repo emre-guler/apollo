@@ -50,7 +50,7 @@ namespace Apollo.Controllers
         public IActionResult TeamLogin([FromForm] LoginViewModel teamVM)
         {
             Team teamControl = _teamService.TeamLoginControl(teamVM);
-            if(teamControl != null)
+            if(teamControl is not null)
             {
                 string teamJWT = _teamService.TeamLogin(teamControl.Id);
                 Response.Cookies.Append("apolloJWT", teamJWT, new CookieOptions 

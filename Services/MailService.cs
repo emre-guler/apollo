@@ -15,13 +15,13 @@ namespace Apollo.Services
         private bool mailServerSSL = true;
         public void PlayerWelcomeMail(string playerMailAddress)
         {
-            MailMessage message = new MailMessage()
+            MailMessage message = new()
             {
                 From = new MailAddress(senderMailAddress),
                 Subject = "Welcome / Hoşgeldiniz",
                 Body = "Deneme"
             };
-            SmtpClient mailServer = new SmtpClient()
+            SmtpClient mailServer = new()
             {
                 Credentials = new NetworkCredential(senderMailAddress , senderMailPass),
                 Port = mailServerPort,
@@ -34,13 +34,13 @@ namespace Apollo.Services
         }
         public void TeamWelcomeMail(string teamMailAddress)
         {
-            MailMessage message = new MailMessage()
+            MailMessage message = new()
             {
                 From = new MailAddress(senderMailAddress),
                 Subject = "Welcome / Hoşgeldiniz",
                 Body = "Deneme mailidir."
             };
-            SmtpClient mailServer = new SmtpClient()
+            SmtpClient mailServer = new()
             {
                 Credentials = new NetworkCredential(senderMailAddress , senderMailPass),
                 Port = mailServerPort,
@@ -54,13 +54,13 @@ namespace Apollo.Services
 
         public void UserSendMailVerification(int confirmationCode, string url, string userMailAdress)
         {
-            MailMessage message = new MailMessage()
+            MailMessage message = new()
             {
                 From = new MailAddress(senderMailAddress),
                 Subject = "Onaylama Maili",
                 Body = string.Format("<a href='{0}'>Link'e git.</a> Onaylama Kodunuz: {1}", url, confirmationCode)
             };
-            SmtpClient mailServer = new SmtpClient()
+            SmtpClient mailServer = new()
             {
                 Credentials = new NetworkCredential(senderMailAddress, senderMailPass),
                 Port = mailServerPort,

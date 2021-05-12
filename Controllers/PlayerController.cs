@@ -36,7 +36,7 @@ namespace Apollo.Controllers
             if(controlResult)
             {
                 bool newUserControl = _playerService.NewAccountControl(playerVM.MailAddress, playerVM.PhoneNumber);
-                if(!newUserControl)
+                if(newUserControl)
                 {
                     _playerService.CreatePlayer(playerVM);
                     return Ok(true);
@@ -56,7 +56,7 @@ namespace Apollo.Controllers
         public IActionResult PlayerLogin([FromForm] LoginViewModel playerVM)
         {
             Player userControl =  _playerService.PlayerLoginControl(playerVM);
-            if(userControl != null)
+            if(userControl is not null)
             { 
                 string userJWT = _playerService.PlayerLogin(userControl.Id);
                 Response.Cookies.Append("apolloJWT", userJWT, new CookieOptions 
