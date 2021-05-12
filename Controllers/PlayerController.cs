@@ -7,6 +7,7 @@ using Apollo.Entities;
 using Apollo.Enums;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Threading.Tasks;
 
 namespace Apollo.Controllers 
 {
@@ -30,7 +31,7 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/player-register")]
-        public IActionResult PlayerRegister([FromForm] PlayerRegisterViewModel playerVM) 
+        public async Task<IActionResult> PlayerRegister([FromForm] PlayerRegisterViewModel playerVM) 
         {
             bool controlResult = _playerService.PlayerRegisterFormDataControl(playerVM);
             if(controlResult)
@@ -38,7 +39,7 @@ namespace Apollo.Controllers
                 bool newUserControl = _playerService.NewAccountControl(playerVM.MailAddress, playerVM.PhoneNumber);
                 if(newUserControl)
                 {
-                    _playerService.CreatePlayer(playerVM);
+                    await _playerService.CreatePlayer(playerVM);
                     return Ok(true);
                 }
                 else 
@@ -101,7 +102,7 @@ namespace Apollo.Controllers
         }
 
         [HttpGet("/player-mail-verification")]
-        public IActionResult PlayerMailVerificationRequest()
+        public async Task<IActionResult> PlayerMailVerificationRequest()
         {
             string userJWT = Request.Cookies["apolloJWT"];
             string userId = Request.Cookies["apolloPlayerId"];
@@ -113,7 +114,7 @@ namespace Apollo.Controllers
                     bool verifyControl = _playerService.PlayerMailVerificationControl(Int16.Parse(userId));
                     if(verifyControl)
                     {
-                        _playerService.SendMailVerification(Int16.Parse(userId));
+                        await _playerService.SendMailVerification(Int16.Parse(userId));
                         return Ok(true);
                     }
                 }

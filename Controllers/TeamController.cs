@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Apollo.Data;
 using Apollo.Entities;
 using Apollo.Enums;
@@ -24,7 +25,7 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/team-register")]
-        public IActionResult TeamRegister([FromForm] TeamRegisterViewModel teamVM)
+        public async Task<IActionResult> TeamRegister([FromForm] TeamRegisterViewModel teamVM)
         {
             bool controlResult = _teamService.TeamRegisterFormDataControl(teamVM);
             if(controlResult)
@@ -32,7 +33,7 @@ namespace Apollo.Controllers
                 bool newUserControl = _teamService.NewAccountControl(teamVM.MailAddress, teamVM.PhoneNumber);
                 if(!newUserControl)
                 {
-                    _teamService.CreateTeam(teamVM);
+                    await _teamService.CreateTeam(teamVM);
                     return Ok(true);
                 }
                 else
@@ -77,7 +78,7 @@ namespace Apollo.Controllers
         }
 
         [HttpGet("/team-mail-verification")]
-        public IActionResult TeamMailVerificationRequest()
+        public async Task<IActionResult> TeamMailVerificationRequest()
         {
             string teamJWT = Request.Cookies["apolloJWT"];
             string teamId = Request.Cookies["apolloTeamId"];
@@ -89,7 +90,7 @@ namespace Apollo.Controllers
                     bool verifyControl = _teamService.TeamMailVerificationControl(Int16.Parse(teamId));
                     if(verifyControl)
                     {
-                        _teamService.SendMailVerification(Int16.Parse(teamId));
+                        await _teamService.SendMailVerification(Int16.Parse(teamId));
                         return Ok(true);
                     }
                 }

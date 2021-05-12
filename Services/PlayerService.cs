@@ -9,6 +9,7 @@ using System.IO;
 using Microsoft.Extensions.Hosting.Internal;
 using System.Collections.Generic;
 using Apollo.Enums;
+using System.Threading.Tasks;
 
 namespace Apollo.Services 
 {
@@ -86,7 +87,7 @@ namespace Apollo.Services
             }
         }
 
-        public void CreatePlayer(PlayerRegisterViewModel playerVM)
+        public async Task CreatePlayer(PlayerRegisterViewModel playerVM)
         {
             _db.Players.Add(new Player {
                 BirtDate = playerVM.BirthDate,
@@ -101,7 +102,7 @@ namespace Apollo.Services
                 Gender = playerVM.Gender ?? Enums.Gender.Man
             });
             _db.SaveChanges();
-            _mailService.PlayerWelcomeMail(playerVM.MailAddress);
+            await _mailService.PlayerWelcomeMail(playerVM.MailAddress);
         }
         
         public Player PlayerLoginControl(LoginViewModel playerVM)
@@ -267,7 +268,7 @@ namespace Apollo.Services
             return _db.Players.Any(x => !x.DeletedAt.HasValue && !x.IsMailVerified && x.Id == userId);
         }
 
-        public void SendMailVerification(int userId)
+        public async Task SendMailVerification(int userId)
         {
             Player playerData = _db.Players
                 .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == userId);
@@ -275,7 +276,7 @@ namespace Apollo.Services
             int confirmationCode = _methodService.GenerateRandomInt();
             string url = _methodService.GenerateRandomString();            
             webSiteUrl = webSiteUrl + url;
-            _mailService.UserSendMailVerification(confirmationCode, webSiteUrl, playerData.MailAddress);
+            await _mailService.UserSendMailVerification(confirmationCode, webSiteUrl, playerData.MailAddress);
             _db.VerificationRequests.Add(new VerificationRequest {
                 UserType = UserType.Player,
                 UserId = playerData.Id,

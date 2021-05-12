@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Apollo.Data;
 using Apollo.Entities;
 using Apollo.Enums;
@@ -77,7 +78,7 @@ namespace Apollo.Services
             }
         }
 
-        public void CreateTeam(TeamRegisterViewModel teamVM)
+        public async Task CreateTeam(TeamRegisterViewModel teamVM)
         {
             string profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/team", teamVM.ProfilePhoto.FileName);
             using(Stream stream = new FileStream(profilePhotoPath, FileMode.Create))
@@ -93,7 +94,7 @@ namespace Apollo.Services
                 ProfilePhotoPath = profilePhotoPath
             });
             _db.SaveChanges();
-            _mailService.TeamWelcomeMail(teamVM.MailAddress);
+            await _mailService.TeamWelcomeMail(teamVM.MailAddress);
         }
 
         public Team TeamLoginControl(LoginViewModel teamVM)
@@ -135,14 +136,14 @@ namespace Apollo.Services
             return _db.Teams.Any(x => !x.DeletedAt.HasValue && !x.IsMailVerified && x.Id == teamId);
         }
 
-        public void SendMailVerification(int teamId)
+        public async Task SendMailVerification(int teamId)
         {
             Team teamData = _db.Teams
                 .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == teamId);
             int confirmationCode = _methodService.GenerateRandomInt();
             string url = _methodService.GenerateRandomString();
             webSiteUrl = webSiteUrl + url;
-            _mailService.UserSendMailVerification(confirmationCode, webSiteUrl, teamData.MailAddress);
+            await _mailService.UserSendMailVerification(confirmationCode, webSiteUrl, teamData.MailAddress);
             _db.VerificationRequests.Add(new VerificationRequest {
                 UserType = UserType.Team,
                 UserId = teamData.Id,
