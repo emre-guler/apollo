@@ -148,7 +148,7 @@ namespace Apollo.Controllers
                 }   
                 else
                 {
-                    return BadRequest(error : new { erroCode = ErrorCode.InvalidCode });
+                    return BadRequest(error: new { erroCode = ErrorCode.InvalidCode });
                 }
             }
             else

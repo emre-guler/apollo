@@ -272,10 +272,10 @@ namespace Apollo.Services
             Player playerData = _db.Players
                 .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == userId);
 
-            int confirmationCode = new Random().Next(100000, 999999);
+            int confirmationCode = _methodService.GenerateRandomInt();
             string url = _methodService.GenerateRandomString();            
             webSiteUrl = webSiteUrl + url;
-            _mailService.PlayerSendMailVerification(confirmationCode, webSiteUrl, playerData.MailAddress);
+            _mailService.UserSendMailVerification(confirmationCode, webSiteUrl, playerData.MailAddress);
             _db.VerificationRequests.Add(new VerificationRequest {
                 UserType = UserType.Player,
                 UserId = playerData.Id,
@@ -291,7 +291,7 @@ namespace Apollo.Services
             var verification = _db.VerificationRequests
                 .LastOrDefault(
                     x => !x.DeletedAt.HasValue && 
-                    x.CreatedAt.Value.AddHours(1) >  DateTime.Now &&
+                    x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
                     x.ConfirmationCode == confirmationCode &&
                     x.URL == hashedData &&
                     x.UserType == UserType.Player

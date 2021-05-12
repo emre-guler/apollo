@@ -1,3 +1,4 @@
+using System;
 using Apollo.Data;
 using Apollo.Entities;
 using Apollo.Enums;
@@ -73,6 +74,63 @@ namespace Apollo.Controllers
         {
             Response.Cookies.Delete("apolloJWT");
             return Ok(true);
+        }
+
+        [HttpGet("/team-mail-verification")]
+        public IActionResult TeamMailVerificationRequest()
+        {
+            string teamJWT = Request.Cookies["apolloJWT"];
+            string teamId = Request.Cookies["apolloTeamId"];
+            if(!string.IsNullOrEmpty(teamJWT) && !string.IsNullOrEmpty(teamId))
+            {
+                bool control = _teamService.TeamAuthenticator(teamJWT, Int16.Parse(teamId));
+                if(control)
+                {
+                    bool verifyControl = _teamService.TeamMailVerificationControl(Int16.Parse(teamId));
+                    if(verifyControl)
+                    {
+                        _teamService.SendMailVerification(Int16.Parse(teamId));
+                        return Ok(true);
+                    }
+                }
+            }
+            return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
+        }
+
+        [HttpGet("/verification/{hashedData}")]
+        public IActionResult TeamMailVerifyPage([FromQuery] string hashedData)
+        {
+            bool confirm = _teamService.TeamMailVerificationPageControl(hashedData);
+            if(confirm)
+            {
+                return Ok(true);
+            }
+            else
+            {
+                return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
+            }
+        }
+
+        [HttpPost("/verification/{hashedData")]
+        public IActionResult TeamMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
+        {
+            bool pageConfirm = _teamService.TeamMailVerificationPageControl(hashedData);
+            if(pageConfirm)
+            {
+                bool confirm = _teamService.TeamMailConfirmation(confirmationCode, hashedData);
+                if(confirm)
+                {
+                    return Ok(true);
+                }
+                else
+                {
+                    return BadRequest(error: new { errorCode = ErrorCode.InvalidCode });
+                }
+            }
+            else
+            {
+                return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
+            }
         }
     }
 }

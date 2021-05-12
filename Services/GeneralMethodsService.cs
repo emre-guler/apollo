@@ -37,5 +37,10 @@ namespace Apollo.Services
             }
             return response;
         }
+
+        public int GenerateRandomInt()
+        {
+            return random.Next(100000, 999999);
+        }
     }
 }

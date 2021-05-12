@@ -52,7 +52,7 @@ namespace Apollo.Services
             mailServer.Send(message);
         }
 
-        public void PlayerSendMailVerification(int confirmationCode, string url, string playerMailAddress)
+        public void UserSendMailVerification(int confirmationCode, string url, string userMailAdress)
         {
             MailMessage message = new MailMessage()
             {
@@ -68,7 +68,7 @@ namespace Apollo.Services
                 EnableSsl = mailServerSSL
             };
 
-            message.To.Add(playerMailAddress);
+            message.To.Add(userMailAdress);
             mailServer.Send(message);
         }
     }

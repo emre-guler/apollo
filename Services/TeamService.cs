@@ -4,25 +4,29 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Apollo.Data;
 using Apollo.Entities;
+using Apollo.Enums;
 using Apollo.ViewModels;
 
 namespace Apollo.Services
 {
     public class TeamService
     {
+        private string webSiteUrl = "http://localhost:5001/";
         private readonly ApolloContext _db;
         private readonly AuthenticationService _authenticationService ;
-
+        private readonly GeneralMethodsService _methodService;
         readonly MailService _mailService;
         public TeamService(
             ApolloContext db,
             AuthenticationService authenticationService,
-            MailService mailService
+            MailService mailService,
+            GeneralMethodsService methodService
         )
         {
             _db = db;
             _authenticationService = authenticationService;
             _mailService = mailService;
+            _methodService = methodService;
         }
 
         public bool TeamRegisterFormDataControl(TeamRegisterViewModel teamVM)
@@ -100,12 +104,9 @@ namespace Apollo.Services
                     .Where(x => x.MailAddress == teamVM.MailAddress)
                     .FirstOrDefault();
                 bool passwordControl = BCrypt.Net.BCrypt.Verify(teamVM.Password, team.Password);
-                if(team != null)
+                if(team != null && passwordControl)
                 {
-                    if(passwordControl)
-                    {
-                        return team;
-                    }
+                    return team;
                 }
             }
             return null;
@@ -114,6 +115,78 @@ namespace Apollo.Services
         public string TeamLogin(int teamId)
         {
             return _authenticationService.GenerateToken(teamId);
+        }
+
+        public bool TeamAuthenticator(string JWT, int teamId)
+        {
+            string newToken = _authenticationService.GenerateToken(teamId);
+            if(newToken == JWT)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool TeamMailVerificationControl(int teamId)
+        {
+            return _db.Teams.Any(x => !x.DeletedAt.HasValue && !x.IsMailVerified && x.Id == teamId);
+        }
+
+        public void SendMailVerification(int teamId)
+        {
+            Team teamData = _db.Teams
+                .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == teamId);
+            int confirmationCode = _methodService.GenerateRandomInt();
+            string url = _methodService.GenerateRandomString();
+            webSiteUrl = webSiteUrl + url;
+            _mailService.UserSendMailVerification(confirmationCode, webSiteUrl, teamData.MailAddress);
+            _db.VerificationRequests.Add(new VerificationRequest {
+                UserType = UserType.Team,
+                UserId = teamData.Id,
+                URL = url,
+                CreatedAt = DateTime.Now,
+                ConfirmationCode = confirmationCode
+            });
+            _db.SaveChanges();
+        }
+
+        public bool TeamMailConfirmation(int confirmationCode, string hashedData)
+        {
+            var verification = _db.VerificationRequests
+                .LastOrDefault(
+                    x => !x.DeletedAt.HasValue &&
+                    x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
+                    x.ConfirmationCode == confirmationCode &&
+                    x.URL == hashedData &&
+                    x.UserType == UserType.Team
+                );
+            if(verification != null)
+            {
+                verification.DeletedAt = DateTime.Now;
+                Team teamData = _db.Teams.FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == verification.UserId);
+                teamData.IsMailVerified = true;
+                _db.SaveChanges();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool TeamMailVerificationPageControl(string hashedData)
+        {
+            return _db.VerificationRequests
+                .Any(
+                    x => !x.DeletedAt.HasValue &&
+                    x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
+                    x.URL == hashedData &&
+                    x.UserType == UserType.Team
+                );
         }
     }
 }
