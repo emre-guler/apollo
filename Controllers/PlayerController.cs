@@ -121,17 +121,39 @@ namespace Apollo.Controllers
             return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
         }
 
-        [HttpPost("/verification/{hashedData}")]
-        public IActionResult PlayerMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
+        [HttpGet("verification/{hashedData}")]
+        public IActionResult PlayerMailVerifyPage([FromQuery] string hashedData)
         {
-            bool confirm = _playerService.PlayerControlMailConfirmation(confirmationCode, hashedData);
+            bool confirm = _playerService.PlayerMailVerificationPageControl(hashedData);
             if(confirm)
             {
                 return Ok(true);
-            }   
+            }
+            else 
+            {
+                return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
+            }
+        }
+
+        [HttpPost("/verification/{hashedData}")]
+        public IActionResult PlayerMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
+        {
+            bool pageConfirm = _playerService.PlayerMailVerificationPageControl(hashedData);
+            if(pageConfirm)
+            {
+                bool confirm = _playerService.PlayerMailConfirmation(confirmationCode, hashedData);
+                if(confirm)
+                {
+                    return Ok(true);
+                }   
+                else
+                {
+                    return BadRequest(error : new { erroCode = ErrorCode.InvalidCode });
+                }
+            }
             else
             {
-                return BadRequest(error : new { erroCode = ErrorCode.InvalidCredentials });
+                return BadRequest(error: new { erroCode = ErrorCode.LinkExpired });
             }
         }
     }

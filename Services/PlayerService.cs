@@ -286,7 +286,7 @@ namespace Apollo.Services
             _db.SaveChanges();
         }
 
-        public bool PlayerControlMailConfirmation(int confirmationCode, string hashedData)
+        public bool PlayerMailConfirmation(int confirmationCode, string hashedData)
         {
             var verification = _db.VerificationRequests
                 .LastOrDefault(
@@ -309,6 +309,17 @@ namespace Apollo.Services
             {
                 return false;
             }
+        }
+
+        public bool PlayerMailVerificationPageControl(string hashedData)
+        {
+            return _db.VerificationRequests
+                .Any(
+                    x => !x.DeletedAt.HasValue &&
+                    x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
+                    x.URL == hashedData &&
+                    x.UserType == UserType.Player
+                );
         }
     }
 }
