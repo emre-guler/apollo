@@ -133,5 +133,21 @@ namespace Apollo.Controllers
                 return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
             }
         }
+
+        [HttpGet("/team-freeze-account")]
+        public IActionResult TeamFreezeAccount()
+        {
+            string teamJWT = Request.Cookies["apolloJWT"];
+            string teamId = Request.Cookies["apolloTeamId"];
+            if(!string.IsNullOrEmpty(teamJWT) && !string.IsNullOrEmpty(teamId))
+            {
+                bool control = _teamService.FreezeTeamAccount(Int16.Parse(teamId));
+                if(control)
+                {
+                    return Ok(true);   
+                }
+            }
+            return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
+        }
     }
 }

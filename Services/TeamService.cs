@@ -189,5 +189,21 @@ namespace Apollo.Services
                     x.UserType == UserType.Team
                 );
         }
+
+        public bool FreezeTeamAccount(int teamId)
+        {
+            Team teamData = _db.Teams
+                .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == teamId);
+            if(teamData is not null) 
+            {
+                teamData.DeletedAt =  DateTime.Now;
+                _db.SaveChanges();
+                return true;
+            }
+            else 
+            {
+                return false;
+            }
+        }
     }
 }
