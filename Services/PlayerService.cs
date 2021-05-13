@@ -276,7 +276,7 @@ namespace Apollo.Services
             int confirmationCode = _methodService.GenerateRandomInt();
             string url = _methodService.GenerateRandomString();            
             webSiteUrl = webSiteUrl + url;
-            await _mailService.UserSendMailVerification(confirmationCode, webSiteUrl, playerData.MailAddress);
+            await _mailService.PlayerSendMailVerification(confirmationCode, webSiteUrl, playerData.MailAddress);
             _db.VerificationRequests.Add(new VerificationRequest {
                 UserType = UserType.Player,
                 UserId = playerData.Id,

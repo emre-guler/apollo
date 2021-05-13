@@ -1,0 +1,136 @@
+@model Apollo.ViewModels.UserMailVerificationViewModel
+
+<style>
+    * {
+        margin: 0px;
+        box-sizing: border-box;
+    }
+
+    body,
+    html {
+        height: 100%;
+        width: 100%;
+    }
+
+    .backgroundContainer {
+        height: 100vh;
+        width: 100vw;
+        background-color: black;
+    }
+
+    .title {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        height: 20vh;
+    }
+
+    .titleSpan {
+        color: white;
+        font-size: 50px;
+        font-family: 'Bree Serif', serif;
+    }
+
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100vw;
+        height: 70vh;
+        box-sizing: content-box;
+    }
+
+    .contentText {
+        display: flex;
+        width: 100vw;
+        height: 20vh;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .contentTextSpan {
+        width: 100vw;
+        color: white;
+        font-size: 15px;
+        text-align: center;
+        font-family: 'Bree Serif', serif;
+    }
+
+    .contentActivationSpanArea {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        width: 100vw;
+
+    }
+
+    .contentActivationSpan {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        width: 170px;
+        height: 50px;
+        border: 2px solid white;
+        letter-spacing: 0.2em;
+        font-family: 'Bree Serif', serif;
+        font-size: 20px;
+        padding-bottom: 4px;
+        padding-left: 8px;
+    }
+
+    .footer {
+        display: flex;
+        height: 10vh;
+        width: 100vw;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #footerTextLastSpan {
+        color: white;
+        font-size: 15px;
+        text-align: center;
+        font-family: 'Bree Serif', serif;
+    }
+
+    .footerTextSpan {
+        color: white;
+        font-size: 15px;
+        text-align: center;
+        font-family: 'Bree Serif', serif;
+        border-right: 1px solid white;
+        padding-right: 10px;
+        margin-right: 10px;
+    }
+
+    .footer a {
+        text-decoration: none;
+        color: white;
+    }
+</style>
+
+<div class="backgroundContainer">
+    <div class="title">
+        <span class="titleSpan">Mail Aktivasyonu</span>
+    </div>
+    <div class="content">
+        <div class="contentText">
+            <span class="contentTextSpan">
+                Sevgili @Model.Name, son birkaç işlemimiz kaldı. Aşağıda gördüğün aktivasyon kodunu kullanarak mailini aktif
+                edebilirsin. <br> Yapacak olduğun bu mail aktivasyonu hesabını daha güvende tutmanı sağlayacak ve güncel
+                olayları mailinden takip edebileceksin.<br>İyi Şanslar.<br>Unutma bu kod sadece 1 saat geçerli kalacak.
+            </span>
+        </div>
+        <div class="contentActivationSpanArea">
+            <a href="@Model.Link" class="contentActivationSpan">
+                @Model.ConfirmationCode
+            </a>
+        </div>
+    </div>
+    <footer class="footer">
+        <span class="footerTextSpan"><a href="#">Apollo.com</a></span>
+        <span class="footerTextSpan"><a href="#">Destek</a></span>
+        <span id="footerTextLastSpan"><a href="#">Ionic Software</a></span>
+    </footer>
+</div>

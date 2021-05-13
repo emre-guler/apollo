@@ -1,0 +1,138 @@
+@model Apollo.ViewModels.UserMailVerificationViewModel
+
+<style>
+    * {
+        margin: 0px;
+        box-sizing: border-box;
+    }
+
+    body,
+    html {
+        height: 100%;
+        width: 100%;
+    }
+
+    .backgroundContainer {
+        height: 100vh;
+        width: 100vw;
+        background-color: black;
+    }
+
+    .title {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        height: 20vh;
+    }
+
+    .titleSpan {
+        color: white;
+        font-size: 50px;
+        font-family: 'Bree Serif', serif;
+    }
+
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100vw;
+        height: 70vh;
+        box-sizing: content-box;
+    }
+
+    .contentText {
+        display: flex;
+        width: 100vw;
+        height: 20vh;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .contentTextSpan {
+        width: 100vw;
+        color: white;
+        font-size: 15px;
+        text-align: center;
+        font-family: 'Bree Serif', serif;
+    }
+
+    .contentButtonArea {
+        display: flex;
+        width: 100vw;
+        height: 20vh;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .contentButton {
+        display: flex;
+        background-color: black;
+        border: 2px solid white;
+        width: 170px;
+        height: 50px;
+        color: white;
+        font-family: 'Fredoka One', cursive;
+        font-size: 16px;
+        padding: 0;
+    }
+
+    .contentButton a {
+        color: white;
+        text-decoration: none;
+        padding-top: 10px;
+        width: 170px;
+        height: 50px;
+    }
+
+    .footer {
+        display: flex;
+        height: 10vh;
+        width: 100vw;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #footerTextLastSpan {
+        color: white;
+        font-size: 15px;
+        text-align: center;
+        font-family: 'Bree Serif', serif;
+    }
+
+    .footerTextSpan {
+        color: white;
+        font-size: 15px;
+        text-align: center;
+        font-family: 'Bree Serif', serif;
+        border-right: 1px solid white;
+        padding-right: 10px;
+        margin-right: 10px;
+    }
+
+    .footer a {
+        text-decoration: none;
+        color: white;
+    }
+</style>
+
+<div class="backgroundContainer">
+    <div class="title">
+        <span class="titleSpan">Aramıza Hoşgeldiniz</span>
+    </div>
+    <div class="content">
+        <div class="contentText">
+            <span class="contentTextSpan">
+                Evet @Model.Name takımı güzel yol katediyorsunuz , aranızdaki sinerjiyi bulup
+                takımınızı yarattınız.<br> Şimdi takım profilini düzenleme zamanı.<br> Unutmayın takımınızı ne kadar iyi
+                tanıtırsanız hedeflerinize o kadar hızlı ulaşırsınız.
+            </span>
+        </div>
+        <div class="contentButtonArea">
+            <button class="contentButton"><a href="@Model.Link">Takım Profiline Git</a></button>
+        </div>
+    </div>
+    <footer class="footer">
+        <span class="footerTextSpan"><a href="#">Apollo.com</a></span>
+        <span class="footerTextSpan"><a href="#">Destek</a></span>
+        <span id="footerTextLastSpan"><a href="#">Ionic Software</a></span>
+    </footer>
+</div>
