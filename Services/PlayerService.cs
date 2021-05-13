@@ -338,5 +338,21 @@ namespace Apollo.Services
                 return false;
             }
         }
+
+        public bool FreezePlayerAccount(int userId)
+        {
+            Player playerData = _db.Players
+                .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == userId);
+            if(playerData is not null)
+            {
+                playerData.DeletedAt = DateTime.Now;
+                _db.SaveChanges();
+                return true;
+            }
+            else 
+            {
+                return false;
+            }
+        }
     }
 }

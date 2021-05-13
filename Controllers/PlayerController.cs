@@ -173,5 +173,21 @@ namespace Apollo.Controllers
             }
             return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
         }
+
+        [HttpGet("/player-freeze-account")]
+        public IActionResult PlayerFreezeAccount()
+        {
+            string userJWT = Request.Cookies["apolloJWT"];
+            string userId = Request.Cookies["apolloPlayerId"];
+            if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
+            {
+                bool control = _playerService.FreezePlayerAccount(Int16.Parse(userId));
+                if(control)
+                {
+                    return Ok(true);
+                }
+            }
+            return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
+        }
     }
 }
