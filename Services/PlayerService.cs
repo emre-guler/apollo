@@ -168,6 +168,10 @@ namespace Apollo.Services
                     playerData.TwitterContact = playerVM.TwitterContact.Trim();
                     playerData.FacebookContact = playerVM.FacebookContact.Trim();
                     playerData.YoutubeContact = playerVM.YoutubeContact.Trim();
+                    playerData.SteamContact = playerVM.SteamContact.Trim();
+                    playerData.LolContact = playerVM.LolContact.Trim();
+                    playerData.ValorantContact = playerVM.ValorantContact.Trim();
+                    playerData.TwitchContact = playerVM.TwitchContact.Trim();
                     playerData.ProfilePhotoId = newProfilePhoto.Id;
                     playerData.SalaryException = playerVM.SalaryException;
                     playerData.IsActiveForTeam = playerVM.IsActiveForTeam;

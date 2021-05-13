@@ -10,6 +10,10 @@ namespace Apollo.ViewModels
         public string TwitterContact { get; set; }
         public string FacebookContact { get; set; }
         public string YoutubeContact { get; set; }
+        public string TwitchContact { get; set; }
+        public string SteamContact { get; set; }
+        public string ValorantContact { get; set; }
+        public string LolContact { get; set; }
         public IFormFile ProfilePhoto { get; set; }
         public int SalaryException { get; set; }
         public bool IsActiveForTeam { get; set; }
