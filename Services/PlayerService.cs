@@ -322,5 +322,21 @@ namespace Apollo.Services
                     x.UserType == UserType.Player
                 );
         }
+
+        public bool PlayerUpdateState(int userId)
+        {
+            Player playerData = _db.Players
+                .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == userId);
+            if(playerData is not null)
+            {
+                playerData.IsActiveForTeam = !playerData.IsActiveForTeam;
+                _db.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

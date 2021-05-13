@@ -157,5 +157,21 @@ namespace Apollo.Controllers
                 return BadRequest(error: new { erroCode = ErrorCode.LinkExpired });
             }
         }
+
+        [HttpGet("/player-update-state")]
+        public IActionResult PlayerUpdateState()
+        {
+            string userJWT = Request.Cookies["apolloJWT"];
+            string userId = Request.Cookies["apolloPlayerId"];
+            if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
+            {
+                bool control = _playerService.PlayerUpdateState(Int16.Parse(userId));
+                if(control)
+                {
+                    return Ok(true);
+                }
+            }
+            return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
+        }
     }
 }
