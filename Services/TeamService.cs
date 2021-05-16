@@ -7,6 +7,7 @@ using Apollo.Data;
 using Apollo.Entities;
 using Apollo.Enums;
 using Apollo.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Apollo.Services
 {
@@ -64,10 +65,10 @@ namespace Apollo.Services
             }
         }
 
-        public bool NewAccountControl(string mailAddress, string phoneNumber)
+        public async Task<bool> NewAccountControl(string mailAddress, string phoneNumber)
         {
-            bool teamControl = _db.Teams
-                .Any(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber);
+            bool teamControl = await _db.Teams
+                .AnyAsync(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber);
             if(teamControl)
             {
                 return true;
@@ -83,7 +84,7 @@ namespace Apollo.Services
             string profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/team", teamVM.ProfilePhoto.FileName);
             using(Stream stream = new FileStream(profilePhotoPath, FileMode.Create))
             {
-                teamVM.ProfilePhoto.CopyTo(stream);
+                await teamVM.ProfilePhoto.CopyToAsync(stream);
             };
             _db.Teams.Add(new Team {
                 TeamName = teamVM.TeamName,
@@ -93,17 +94,17 @@ namespace Apollo.Services
                 PhoneNumber = teamVM.TeamName,
                 ProfilePhotoPath = profilePhotoPath
             });
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             await _mailService.TeamWelcomeMail(teamVM.MailAddress);
         }
 
-        public Team TeamLoginControl(LoginViewModel teamVM)
+        public async Task<Team> TeamLoginControl(LoginViewModel teamVM)
         {
             if(!String.IsNullOrEmpty(teamVM.MailAddress) || !String.IsNullOrEmpty(teamVM.Password))
             {
-                Team team = _db.Teams
+                Team team = await _db.Teams
                     .Where(x => x.MailAddress == teamVM.MailAddress)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
                 bool passwordControl = BCrypt.Net.BCrypt.Verify(teamVM.Password, team.Password);
                 if(team is not null && passwordControl)
                 {
@@ -131,9 +132,9 @@ namespace Apollo.Services
             }
         }
 
-        public bool TeamMailVerificationControl(int teamId)
+        public async Task<bool> TeamMailVerificationControl(int teamId)
         {
-            return _db.Teams.Any(x => !x.DeletedAt.HasValue && !x.IsMailVerified && x.Id == teamId);
+            return await _db.Teams.AnyAsync(x => !x.DeletedAt.HasValue && !x.IsMailVerified && x.Id == teamId);
         }
 
         public async Task SendMailVerification(int teamId)
@@ -151,13 +152,13 @@ namespace Apollo.Services
                 CreatedAt = DateTime.Now,
                 ConfirmationCode = confirmationCode
             });
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public bool TeamMailConfirmation(int confirmationCode, string hashedData)
+        public async Task<bool> TeamMailConfirmation(int confirmationCode, string hashedData)
         {
-            var verification = _db.VerificationRequests
-                .LastOrDefault(
+            var verification = await _db.VerificationRequests
+                .LastOrDefaultAsync(
                     x => !x.DeletedAt.HasValue &&
                     x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
                     x.ConfirmationCode == confirmationCode &&
@@ -167,9 +168,9 @@ namespace Apollo.Services
             if(verification is not null)
             {
                 verification.DeletedAt = DateTime.Now;
-                Team teamData = _db.Teams.FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == verification.UserId);
+                Team teamData = await _db.Teams.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == verification.UserId);
                 teamData.IsMailVerified = true;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
 
                 return true;
             }
@@ -179,10 +180,10 @@ namespace Apollo.Services
             }
         }
 
-        public bool TeamMailVerificationPageControl(string hashedData)
+        public async Task<bool> TeamMailVerificationPageControl(string hashedData)
         {
-            return _db.VerificationRequests
-                .Any(
+            return await _db.VerificationRequests
+                .AnyAsync(
                     x => !x.DeletedAt.HasValue &&
                     x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
                     x.URL == hashedData &&
@@ -190,14 +191,14 @@ namespace Apollo.Services
                 );
         }
 
-        public bool FreezeTeamAccount(int teamId)
+        public async Task<bool> FreezeTeamAccount(int teamId)
         {
-            Team teamData = _db.Teams
-                .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == teamId);
+            Team teamData = await _db.Teams
+                .FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == teamId);
             if(teamData is not null) 
             {
                 teamData.DeletedAt =  DateTime.Now;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return true;
             }
             else 

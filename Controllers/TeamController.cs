@@ -30,7 +30,7 @@ namespace Apollo.Controllers
             bool controlResult = _teamService.TeamRegisterFormDataControl(teamVM);
             if(controlResult)
             {
-                bool newUserControl = _teamService.NewAccountControl(teamVM.MailAddress, teamVM.PhoneNumber);
+                bool newUserControl = await _teamService.NewAccountControl(teamVM.MailAddress, teamVM.PhoneNumber);
                 if(!newUserControl)
                 {
                     await _teamService.CreateTeam(teamVM);
@@ -48,9 +48,9 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/team-login")]
-        public IActionResult TeamLogin([FromForm] LoginViewModel teamVM)
+        public async Task<IActionResult> TeamLogin([FromForm] LoginViewModel teamVM)
         {
-            Team teamControl = _teamService.TeamLoginControl(teamVM);
+            Team teamControl = await _teamService.TeamLoginControl(teamVM);
             if(teamControl is not null)
             {
                 string teamJWT = _teamService.TeamLogin(teamControl.Id);
@@ -87,7 +87,7 @@ namespace Apollo.Controllers
                 bool control = _teamService.TeamAuthenticator(teamJWT, Int16.Parse(teamId));
                 if(control)
                 {
-                    bool verifyControl = _teamService.TeamMailVerificationControl(Int16.Parse(teamId));
+                    bool verifyControl = await _teamService.TeamMailVerificationControl(Int16.Parse(teamId));
                     if(verifyControl)
                     {
                         await _teamService.SendMailVerification(Int16.Parse(teamId));
@@ -99,9 +99,9 @@ namespace Apollo.Controllers
         }
 
         [HttpGet("/verification/{hashedData}")]
-        public IActionResult TeamMailVerifyPage([FromQuery] string hashedData)
+        public async Task<IActionResult> TeamMailVerifyPage([FromQuery] string hashedData)
         {
-            bool confirm = _teamService.TeamMailVerificationPageControl(hashedData);
+            bool confirm = await _teamService.TeamMailVerificationPageControl(hashedData);
             if(confirm)
             {
                 return Ok(true);
@@ -113,12 +113,12 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/verification/{hashedData")]
-        public IActionResult TeamMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
+        public async Task<IActionResult> TeamMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
         {
-            bool pageConfirm = _teamService.TeamMailVerificationPageControl(hashedData);
+            bool pageConfirm = await _teamService.TeamMailVerificationPageControl(hashedData);
             if(pageConfirm)
             {
-                bool confirm = _teamService.TeamMailConfirmation(confirmationCode, hashedData);
+                bool confirm = await _teamService.TeamMailConfirmation(confirmationCode, hashedData);
                 if(confirm)
                 {
                     return Ok(true);
@@ -135,13 +135,13 @@ namespace Apollo.Controllers
         }
 
         [HttpGet("/team-freeze-account")]
-        public IActionResult TeamFreezeAccount()
+        public async Task<IActionResult> TeamFreezeAccount()
         {
             string teamJWT = Request.Cookies["apolloJWT"];
             string teamId = Request.Cookies["apolloTeamId"];
             if(!string.IsNullOrEmpty(teamJWT) && !string.IsNullOrEmpty(teamId))
             {
-                bool control = _teamService.FreezeTeamAccount(Int16.Parse(teamId));
+                bool control = await _teamService.FreezeTeamAccount(Int16.Parse(teamId));
                 if(control)
                 {
                     return Ok(true);   
