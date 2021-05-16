@@ -36,7 +36,7 @@ namespace Apollo.Controllers
             bool controlResult = _playerService.PlayerRegisterFormDataControl(playerVM);
             if(controlResult)
             {
-                bool newUserControl = _playerService.NewAccountControl(playerVM.MailAddress, playerVM.PhoneNumber);
+                bool newUserControl = await _playerService.NewAccountControl(playerVM.MailAddress, playerVM.PhoneNumber);
                 if(newUserControl)
                 {
                     await _playerService.CreatePlayer(playerVM);
@@ -54,9 +54,9 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/player-login")]
-        public IActionResult PlayerLogin([FromForm] LoginViewModel playerVM)
+        public async Task<IActionResult> PlayerLogin([FromForm] LoginViewModel playerVM)
         {
-            Player userControl =  _playerService.PlayerLoginControl(playerVM);
+            Player userControl = await _playerService.PlayerLoginControl(playerVM);
             if(userControl is not null)
             { 
                 string userJWT = _playerService.PlayerLogin(userControl.Id);
@@ -82,7 +82,7 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/player-buildup-profile")]
-        public IActionResult PlayerBuildUpProfile([FromForm] PlayerBuildUpViewModel playerVM)
+        public async Task<IActionResult> PlayerBuildUpProfile([FromForm] PlayerBuildUpViewModel playerVM)
         {
             string userJWT = Request.Cookies["apolloJWT"];
             string userId = Request.Cookies["apolloPlayerId"];
@@ -91,7 +91,7 @@ namespace Apollo.Controllers
                 bool control = _playerService.PlayerAuthenticator(userJWT, Int16.Parse(userId));
                 if(control)
                 {
-                    bool result = _playerService.BuilUpYourProfile(playerVM, userJWT, userId);
+                    bool result = await _playerService.BuilUpYourProfile(playerVM, userJWT, userId);
                     if(result)
                     {
                         return Ok(true);
@@ -111,7 +111,7 @@ namespace Apollo.Controllers
                 bool control = _playerService.PlayerAuthenticator(userJWT, Int16.Parse(userId));
                 if(control)
                 {
-                    bool verifyControl = _playerService.PlayerMailVerificationControl(Int16.Parse(userId));
+                    bool verifyControl = await _playerService.PlayerMailVerificationControl(Int16.Parse(userId));
                     if(verifyControl)
                     {
                         await _playerService.SendMailVerification(Int16.Parse(userId));
@@ -123,9 +123,9 @@ namespace Apollo.Controllers
         }
 
         [HttpGet("verification/{hashedData}")]
-        public IActionResult PlayerMailVerifyPage([FromQuery] string hashedData)
+        public async Task<IActionResult> PlayerMailVerifyPage([FromQuery] string hashedData)
         {
-            bool confirm = _playerService.PlayerMailVerificationPageControl(hashedData);
+            bool confirm = await _playerService.PlayerMailVerificationPageControl(hashedData);
             if(confirm)
             {
                 return Ok(true);
@@ -137,12 +137,12 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/verification/{hashedData}")]
-        public IActionResult PlayerMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
+        public async Task<IActionResult> PlayerMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
         {
-            bool pageConfirm = _playerService.PlayerMailVerificationPageControl(hashedData);
+            bool pageConfirm = await _playerService.PlayerMailVerificationPageControl(hashedData);
             if(pageConfirm)
             {
-                bool confirm = _playerService.PlayerMailConfirmation(confirmationCode, hashedData);
+                bool confirm = await _playerService.PlayerMailConfirmation(confirmationCode, hashedData);
                 if(confirm)
                 {
                     return Ok(true);
@@ -159,13 +159,13 @@ namespace Apollo.Controllers
         }
 
         [HttpGet("/player-update-state")]
-        public IActionResult PlayerUpdateState()
+        public async Task<IActionResult> PlayerUpdateState()
         {
             string userJWT = Request.Cookies["apolloJWT"];
             string userId = Request.Cookies["apolloPlayerId"];
             if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
             {
-                bool control = _playerService.PlayerUpdateState(Int16.Parse(userId));
+                bool control = await _playerService.PlayerUpdateState(Int16.Parse(userId));
                 if(control)
                 {
                     return Ok(true);
@@ -175,13 +175,13 @@ namespace Apollo.Controllers
         }
 
         [HttpGet("/player-freeze-account")]
-        public IActionResult PlayerFreezeAccount()
+        public async Task<IActionResult> PlayerFreezeAccount()
         {
             string userJWT = Request.Cookies["apolloJWT"];
             string userId = Request.Cookies["apolloPlayerId"];
             if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
             {
-                bool control = _playerService.FreezePlayerAccount(Int16.Parse(userId));
+                bool control = await _playerService.FreezePlayerAccount(Int16.Parse(userId));
                 if(control)
                 {
                     return Ok(true);

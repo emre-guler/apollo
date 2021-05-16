@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting.Internal;
 using System.Collections.Generic;
 using Apollo.Enums;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Apollo.Services 
 {
@@ -73,10 +74,11 @@ namespace Apollo.Services
             }
         }
 
-        public bool NewAccountControl(string mailAddress, string phoneNumber)
+        public async Task<bool> NewAccountControl(string mailAddress, string phoneNumber)
         {
-            bool userControl = _db.Players
-                .Any(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber);
+            bool userControl = await _db.Players
+                .Where(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber)
+                .AnyAsync();
             if(userControl)
             {
                 return true;
@@ -101,17 +103,17 @@ namespace Apollo.Services
                 Surname = playerVM.Surname,
                 Gender = playerVM.Gender ?? Enums.Gender.Man
             });
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             await _mailService.PlayerWelcomeMail(playerVM.MailAddress);
         }
         
-        public Player PlayerLoginControl(LoginViewModel playerVM)
+        public async Task<Player> PlayerLoginControl(LoginViewModel playerVM)
         {
             if(!String.IsNullOrEmpty(playerVM.MailAddress) || !String.IsNullOrEmpty(playerVM.Password))
             {
-                Player player =  _db.Players
+                Player player = await _db.Players
                     .Where(x => x.MailAddress == playerVM.MailAddress && !x.DeletedAt.HasValue)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
                 if(player is not null)
                 {
                     bool passwordControl = BCrypt.Net.BCrypt.Verify(playerVM.Password, player.Password);
@@ -126,7 +128,7 @@ namespace Apollo.Services
 
         public string PlayerLogin(int playerId)
         {
-           return  _authenticationService.GenerateToken(playerId);
+           return _authenticationService.GenerateToken(playerId);
         }
 
         public bool PlayerAuthenticator(string JWT, int userId)
@@ -142,21 +144,22 @@ namespace Apollo.Services
             }
         }
 
-        public bool BuilUpYourProfile(PlayerBuildUpViewModel playerVM, string userJWT, string playerId)
+        public async Task<bool> BuilUpYourProfile(PlayerBuildUpViewModel playerVM, string userJWT, string playerId)
         {
             int id = Int16.Parse(playerId);
             string newToken = _authenticationService.GenerateToken(id);
             if(userJWT == newToken)
             {
-                Player playerData = _db.Players
-                    .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == id);
+                Player playerData = await _db.Players
+                    .Where(x => !x.DeletedAt.HasValue && x.Id == id)
+                    .FirstOrDefaultAsync();
                 
                 if(playerData is not null)
                 {
                     string profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/player", playerVM.ProfilePhoto.FileName);
                     using (Stream stream = new FileStream(profilePhotoPath, FileMode.Create))
                     {
-                        playerVM.ProfilePhoto.CopyTo(stream);
+                        await playerVM.ProfilePhoto.CopyToAsync(stream);
                     };
                     Photo newProfilePhoto = new()
                     {
@@ -164,7 +167,7 @@ namespace Apollo.Services
                         CreatedAt = DateTime.Now
                     };
                     _db.Photos.Add(newProfilePhoto);
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     playerData.TwitterContact = playerVM.TwitterContact.Trim();
                     playerData.FacebookContact = playerVM.FacebookContact.Trim();
                     playerData.YoutubeContact = playerVM.YoutubeContact.Trim();
@@ -193,20 +196,20 @@ namespace Apollo.Services
                             CreatedAt = DateTime.Now
                         });
                     }
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     foreach(var image in playerVM.UserPhotos)
                     {
                         string photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/player", image.FileName);
                         using(Stream stream = new FileStream(photoPath, FileMode.Create))
                         {
-                            image.CopyTo(stream);
+                            await image.CopyToAsync(stream);
                         };
                         Photo newPhoto = new Photo
                         {
                             PhotoPath = photoPath,
                             CreatedAt = DateTime.Now
                         };
-                        _db.SaveChanges();
+                        await _db.SaveChangesAsync();
                         _db.PlayerPhotos.Add(new PlayerPhoto 
                         {
                             PhotoId = newPhoto.Id,
@@ -214,7 +217,7 @@ namespace Apollo.Services
                             CreatedAt = DateTime.Now
                         });
                     }
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     foreach(var video in playerVM.UserVideos)
                     {
                         string videoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/video", video.FileName);
@@ -227,7 +230,7 @@ namespace Apollo.Services
                             VideoPath = videoPath,
                             CreatedAt = DateTime.Now
                         };
-                        _db.SaveChanges();
+                        await _db.SaveChangesAsync();
                         _db.PlayerVideos.Add(new PlayerVideo 
                         {
                             VideoId = newVideo.Id,
@@ -235,7 +238,7 @@ namespace Apollo.Services
                             PlayerId = id
                         });
                     }
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     foreach(var achievement in playerVM.TournamentAchievements)
                     {
                         _db.Achievements.Add(new Achievement 
@@ -246,7 +249,7 @@ namespace Apollo.Services
                             CreatedAt = DateTime.Now
                         });
                     }
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     foreach(var oldTeam in playerVM.OldTeams)
                     {
                         _db.OldTeams.Add(new Entities.OldTeam 
@@ -260,22 +263,22 @@ namespace Apollo.Services
                             CreatedAt = DateTime.Now
                         });
                     }
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     return true;
                 }
             }
             return false;
         }
 
-        public bool PlayerMailVerificationControl(int userId)
+        public async Task<bool> PlayerMailVerificationControl(int userId)
         {
-            return _db.Players.Any(x => !x.DeletedAt.HasValue && !x.IsMailVerified && x.Id == userId);
+            return await _db.Players.AnyAsync(x => !x.DeletedAt.HasValue && !x.IsMailVerified && x.Id == userId);
         }
 
         public async Task SendMailVerification(int userId)
         {
-            Player playerData = _db.Players
-                .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == userId);
+            Player playerData = await _db.Players
+                .FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == userId);
 
             int confirmationCode = _methodService.GenerateRandomInt();
             string url = _methodService.GenerateRandomString();            
@@ -288,13 +291,13 @@ namespace Apollo.Services
                 CreatedAt = DateTime.Now,
                 ConfirmationCode = confirmationCode
             });
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public bool PlayerMailConfirmation(int confirmationCode, string hashedData)
+        public async Task<bool> PlayerMailConfirmation(int confirmationCode, string hashedData)
         {
-            var verification = _db.VerificationRequests
-                .LastOrDefault(
+            var verification = await _db.VerificationRequests
+                .LastOrDefaultAsync(
                     x => !x.DeletedAt.HasValue && 
                     x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
                     x.ConfirmationCode == confirmationCode &&
@@ -304,9 +307,9 @@ namespace Apollo.Services
             if(verification is not null)
             {
                 verification.DeletedAt = DateTime.Now;
-                Player playerData = _db.Players.FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == verification.UserId);
+                Player playerData = await _db.Players.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == verification.UserId);
                 playerData.IsMailVerified = true;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 
                 return true;
             }
@@ -316,10 +319,10 @@ namespace Apollo.Services
             }
         }
 
-        public bool PlayerMailVerificationPageControl(string hashedData)
+        public async Task<bool> PlayerMailVerificationPageControl(string hashedData)
         {
-            return _db.VerificationRequests
-                .Any(
+            return await _db.VerificationRequests
+                .AnyAsync(
                     x => !x.DeletedAt.HasValue &&
                     x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
                     x.URL == hashedData &&
@@ -327,14 +330,14 @@ namespace Apollo.Services
                 );
         }
 
-        public bool PlayerUpdateState(int userId)
+        public async Task<bool> PlayerUpdateState(int userId)
         {
-            Player playerData = _db.Players
-                .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == userId);
+            Player playerData = await _db.Players
+                .FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == userId);
             if(playerData is not null)
             {
                 playerData.IsActiveForTeam = !playerData.IsActiveForTeam;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return true;
             }
             else
@@ -343,14 +346,14 @@ namespace Apollo.Services
             }
         }
 
-        public bool FreezePlayerAccount(int userId)
+        public async Task<bool> FreezePlayerAccount(int userId)
         {
-            Player playerData = _db.Players
-                .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == userId);
+            Player playerData = await _db.Players
+                .FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == userId);
             if(playerData is not null)
             {
                 playerData.DeletedAt = DateTime.Now;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return true;
             }
             else 

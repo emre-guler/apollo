@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Apollo.Data;
 using Apollo.Entities;
 using Apollo.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Apollo.Services
 {
@@ -30,7 +31,7 @@ namespace Apollo.Services
 
         public async Task PlayerWelcomeMail(string playerMailAddress)
         {
-            Player player = _db.Players.FirstOrDefault(x => !x.DeletedAt.HasValue && x.MailAddress == playerMailAddress);
+            Player player = await _db.Players.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.MailAddress == playerMailAddress);
             UserMailVerificationViewModel viewModel = new() 
             {
                 Name = player.Name,
@@ -52,11 +53,12 @@ namespace Apollo.Services
             };
 
             message.To.Add(playerMailAddress);
-            mailServer.Send(message);
+            await mailServer.SendMailAsync(message);
         }
         public async Task TeamWelcomeMail(string teamMailAddress)
         {
-            string teamName = _db.Teams.FirstOrDefault(x => !x.DeletedAt.HasValue && x.MailAddress == teamMailAddress).TeamName ?? "";
+            Team team = await _db.Teams.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.MailAddress == teamMailAddress);
+            string teamName = team.TeamName ?? "";
             UserMailVerificationViewModel viewModel = new()
             {
                 Name = teamName,
@@ -78,12 +80,13 @@ namespace Apollo.Services
             };
             
             message.To.Add(teamMailAddress);
-            mailServer.Send(message);
+            await mailServer.SendMailAsync(message);
         }
 
         public async Task TeamSendMailVerification(int confirmationCode, string url, string teamMailAdress)
         {
-            string teamName = _db.Teams.FirstOrDefault(x => !x.DeletedAt.HasValue && x.MailAddress == teamMailAdress).TeamName ?? "";
+            Team team = await _db.Teams.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.MailAddress == teamMailAdress);
+            string teamName = team.TeamName ?? "";
             UserMailVerificationViewModel viewModel = new()
             {
                 Name = teamName,
@@ -106,12 +109,13 @@ namespace Apollo.Services
             };
 
             message.To.Add(teamMailAdress);
-            mailServer.Send(message);
+            await mailServer.SendMailAsync(message);
         }
 
         public async Task PlayerSendMailVerification(int confirmationCode, string url, string playerMailAdress)
         {
-            string playerName =_db.Players.FirstOrDefault(x => !x.DeletedAt.HasValue && x.MailAddress  == playerMailAdress).Name ?? "";
+            Player player = await _db.Players.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.MailAddress  == playerMailAdress);
+            string playerName = player.Name ?? "";
             UserMailVerificationViewModel viewModel = new()
             {
                 Name = playerName,
@@ -134,7 +138,7 @@ namespace Apollo.Services
             };
 
             message.To.Add(playerMailAdress);
-            mailServer.Send(message);
+            await mailServer.SendMailAsync(message);
         }
 
     }
