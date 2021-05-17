@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Apollo.Data;
+using Apollo.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Apollo.Services
 {
@@ -17,14 +20,23 @@ namespace Apollo.Services
             _db = db;
         }
 
-        public string GenerateRandomString()
+        public async Task<string> GenerateRandomString(RequestType requestType)
         {
-            string response;
+            string response = "";
             while(true)
             {
                 string randomString = new String(Enumerable.Repeat(chars, stringLen)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
-                var stringControl = _db.VerificationRequests.Any(x => x.URL == randomString);
+                bool stringControl = false;
+                if(requestType == RequestType.ResetPassword)
+                {
+                    stringControl = await _db.PasswordResetRequests.AnyAsync(x => x.URL == randomString);
+                }
+                else if(requestType == RequestType.MailVerification)
+                {
+                    stringControl = await _db.VerificationRequests.AnyAsync(x => x.URL == randomString);
+                }
+
                 if(stringControl)
                 {
                     continue;

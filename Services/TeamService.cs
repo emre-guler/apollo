@@ -142,7 +142,7 @@ namespace Apollo.Services
             Team teamData = _db.Teams
                 .FirstOrDefault(x => !x.DeletedAt.HasValue && x.Id == teamId);
             int confirmationCode = _methodService.GenerateRandomInt();
-            string url = _methodService.GenerateRandomString();
+            string url = await _methodService.GenerateRandomString(RequestType.MailVerification);
             webSiteUrl = webSiteUrl + url;
             await _mailService.TeamSendMailVerification(confirmationCode, webSiteUrl, teamData);
             _db.VerificationRequests.Add(new VerificationRequest {

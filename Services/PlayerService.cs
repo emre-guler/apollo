@@ -282,7 +282,7 @@ namespace Apollo.Services
                 .FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == userId);
 
             int confirmationCode = _methodService.GenerateRandomInt();
-            string url = _methodService.GenerateRandomString();            
+            string url = await _methodService.GenerateRandomString(RequestType.MailVerification);            
             webSiteUrl = webSiteUrl + url;
             await _mailService.PlayerSendMailVerification(confirmationCode, webSiteUrl, playerData);
             _db.VerificationRequests.Add(new VerificationRequest {
@@ -377,7 +377,7 @@ namespace Apollo.Services
                 .FirstOrDefaultAsync();
             
             int confirmationCode = _methodService.GenerateRandomInt();
-            string url = _methodService.GenerateRandomString();            
+            string url = await _methodService.GenerateRandomString(RequestType.ResetPassword);            
             webSiteUrl = webSiteUrl + url;
 
             await _mailService.PlayerSendPasswordCode(confirmationCode, webSiteUrl, playerData);

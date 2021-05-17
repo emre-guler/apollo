@@ -122,7 +122,7 @@ namespace Apollo.Controllers
             return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
         }
 
-        [HttpGet("verification/{hashedData}")]
+        [HttpGet("/verification/{hashedData}")]
         public async Task<IActionResult> PlayerMailVerifyPage([FromQuery] string hashedData)
         {
             bool confirm = await _playerService.PlayerMailVerificationPageControl(hashedData);
