@@ -401,5 +401,27 @@ namespace Apollo.Services
                     x.UserType == UserType.Player
                 );
         }
+
+        public async Task<bool> PlayerResetPassword(int confirmationCode, string hashedData, string password)
+        {
+            PasswordResetRequest resetPassword = await _db.PasswordResetRequests
+                .LastOrDefaultAsync(
+                    x => !x.DeletedAt.HasValue &&
+                    x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
+                    x.ConfirmationCode == confirmationCode &&
+                    x.URL == hashedData &&
+                    x.UserType == UserType.Player
+                );
+            if(resetPassword is not null)
+            {
+                resetPassword.DeletedAt = DateTime.Now;
+                Player playerData = await _db.Players.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == resetPassword.UserId);
+                playerData.Password = BCrypt.Net.BCrypt.HashPassword(password);
+                
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }

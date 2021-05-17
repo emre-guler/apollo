@@ -217,21 +217,35 @@ namespace Apollo.Controllers
         {
             if(!string.IsNullOrEmpty(hashedData))
             {
-                bool confirm = await _playerService.PlayerForgetPasswordConfirmationPageControl(hashedData);
-                if(confirm)
+                bool pageConfirm = await _playerService.PlayerForgetPasswordConfirmationPageControl(hashedData);
+                if(pageConfirm)
                 {
                     return Ok(true);
                 }
-                else
-                {
-                    return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
-                }
             }
-            else
-            {
-                return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
-            }
+            return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
         }
-        
+
+        [HttpPost("/password-reset/{hashedData}")]
+        public async Task<IActionResult> PlayerForgetPasswordConfirmation([FromQuery] string hashedData, [FromBody] PlayerResetPasswordViewModel playerVM)
+        {
+            if(!string.IsNullOrEmpty(hashedData))
+            {
+                bool pageConfirm = await _playerService.PlayerForgetPasswordConfirmationPageControl(hashedData);
+                if(pageConfirm)
+                {
+                    bool confirm = await _playerService.PlayerResetPassword(playerVM.ConfirmationCode, hashedData, playerVM.Password);
+                    if(confirm)
+                    {
+                        return Ok(true);
+                    }
+                    else
+                    {
+                        return BadRequest(error: new { errorCode = ErrorCode.InvalidCode });
+                    }
+                } 
+            }
+            return BadRequest(error: new { erroCode = ErrorCode.LinkExpired });
+        }
     }
 }
