@@ -83,13 +83,11 @@ namespace Apollo.Services
             await mailServer.SendMailAsync(message);
         }
 
-        public async Task TeamSendMailVerification(int confirmationCode, string url, string teamMailAdress)
+        public async Task TeamSendMailVerification(int confirmationCode, string url, Team teamData)
         {
-            Team team = await _db.Teams.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.MailAddress == teamMailAdress);
-            string teamName = team.TeamName ?? "";
             UserMailVerificationViewModel viewModel = new()
             {
-                Name = teamName,
+                Name = teamData.TeamName,
                 ConfirmationCode = confirmationCode,
                 Link = url
             };
@@ -108,17 +106,15 @@ namespace Apollo.Services
                 EnableSsl = mailServerSSL
             };
 
-            message.To.Add(teamMailAdress);
+            message.To.Add(teamData.MailAddress);
             await mailServer.SendMailAsync(message);
         }
 
-        public async Task PlayerSendMailVerification(int confirmationCode, string url, string playerMailAdress)
+        public async Task PlayerSendMailVerification(int confirmationCode, string url, Player playerData)
         {
-            Player player = await _db.Players.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.MailAddress  == playerMailAdress);
-            string playerName = player.Name ?? "";
             UserMailVerificationViewModel viewModel = new()
             {
-                Name = playerName,
+                Name = playerData.Name,
                 ConfirmationCode = confirmationCode,
                 Link = url
             };
@@ -137,9 +133,35 @@ namespace Apollo.Services
                 EnableSsl = mailServerSSL
             };
 
-            message.To.Add(playerMailAdress);
+            message.To.Add(playerData.MailAddress);
             await mailServer.SendMailAsync(message);
         }
 
+        public async Task PlayerSendPasswordCode(int confirmationCode, string url, Player playerData)
+        {
+            PlayerResetPasswordViewModel viewModel = new()
+            {
+                Name = playerData.Name ?? "",
+                ConfirmationCode = confirmationCode,
+                Link = url
+            };
+            var bodyResult = await _viewRenderService.RenderToStringAsync("~/Pages/Mailing/PlayerForgetPasswordMail.cshtml", viewModel);
+            MailMessage message = new()
+            {
+                From = new MailAddress(senderMailAddress),
+                Subject = "Apollo | Şifre Sıfırlama",
+                Body = bodyResult
+            };
+            SmtpClient mailServer = new()
+            {
+                Credentials = new NetworkCredential(senderMailAddress, senderMailPass),
+                Port = mailServerPort,
+                Host = mailServerHost,
+                EnableSsl = mailServerSSL
+            };
+
+            message.To.Add(playerData.MailAddress);
+            await mailServer.SendMailAsync(message);
+        }
     }
 }

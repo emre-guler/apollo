@@ -7,6 +7,7 @@ namespace Apollo.Enums
         InvalidCredentials = 102,
         Unauthorized = 103,
         InvalidCode = 104,
-        LinkExpired = 105
+        LinkExpired = 105,
+        UserNotFind = 106
     }
 }

@@ -230,6 +230,7 @@ namespace Apollo.Services
                             VideoPath = videoPath,
                             CreatedAt = DateTime.Now
                         };
+                        _db.Videos.Add(newVideo);
                         await _db.SaveChangesAsync();
                         _db.PlayerVideos.Add(new PlayerVideo 
                         {
@@ -283,7 +284,7 @@ namespace Apollo.Services
             int confirmationCode = _methodService.GenerateRandomInt();
             string url = _methodService.GenerateRandomString();            
             webSiteUrl = webSiteUrl + url;
-            await _mailService.PlayerSendMailVerification(confirmationCode, webSiteUrl, playerData.MailAddress);
+            await _mailService.PlayerSendMailVerification(confirmationCode, webSiteUrl, playerData);
             _db.VerificationRequests.Add(new VerificationRequest {
                 UserType = UserType.Player,
                 UserId = playerData.Id,
@@ -360,6 +361,34 @@ namespace Apollo.Services
             {
                 return false;
             }
+        }
+
+        public async Task<bool> PlayerControlByMail(string mailAddress)
+        {
+            return await _db.Players
+                .Where(x => !x.DeletedAt.HasValue && x.MailAddress == mailAddress)
+                .AnyAsync();
+        }
+
+        public async Task SendPasswordCode(string mailAddress)
+        {
+            Player playerData = await _db.Players
+                .Where(x => !x.DeletedAt.HasValue && x.MailAddress == mailAddress)
+                .FirstOrDefaultAsync();
+            
+            int confirmationCode = _methodService.GenerateRandomInt();
+            string url = _methodService.GenerateRandomString();            
+            webSiteUrl = webSiteUrl + url;
+
+            await _mailService.PlayerSendPasswordCode(confirmationCode, webSiteUrl, playerData);
+            _db.PasswordResetRequests.Add(new PasswordResetRequest {
+                ConfirmationCode = confirmationCode,
+                CreatedAt = DateTime.Now,
+                URL = webSiteUrl,
+                UserId = playerData.Id,
+                UserType = UserType.Team
+            });
+            await _db.SaveChangesAsync();
         }
     }
 }

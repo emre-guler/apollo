@@ -144,7 +144,7 @@ namespace Apollo.Services
             int confirmationCode = _methodService.GenerateRandomInt();
             string url = _methodService.GenerateRandomString();
             webSiteUrl = webSiteUrl + url;
-            await _mailService.TeamSendMailVerification(confirmationCode, webSiteUrl, teamData.MailAddress);
+            await _mailService.TeamSendMailVerification(confirmationCode, webSiteUrl, teamData);
             _db.VerificationRequests.Add(new VerificationRequest {
                 UserType = UserType.Team,
                 UserId = teamData.Id,

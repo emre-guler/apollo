@@ -189,5 +189,27 @@ namespace Apollo.Controllers
             }
             return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
         }
+
+        [HttpPost("/player-forget-password")]
+        public async Task<IActionResult> PlayerForgetPassword([FromBody] string playerMailAddress)
+        {
+            if(!string.IsNullOrEmpty(playerMailAddress))
+            {
+                bool mailControl = await _playerService.PlayerControlByMail(playerMailAddress);
+                if(mailControl)
+                {
+                    await _playerService.SendPasswordCode(playerMailAddress);
+                    return Ok(true);
+                }
+                else
+                {
+                    return BadRequest(error: new { erroCode = ErrorCode.UserNotFind });
+                }
+            }
+            else
+            {
+                return BadRequest(error: new { errorCode = ErrorCode.MustBeFilled });
+            }
+        }
     }
 }
