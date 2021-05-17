@@ -390,5 +390,16 @@ namespace Apollo.Services
             });
             await _db.SaveChangesAsync();
         }
+
+        public async Task<bool> PlayerForgetPasswordConfirmationPageControl(string hashedData)
+        {
+            return await _db.PasswordResetRequests
+                .AnyAsync(
+                    x => !x.DeletedAt.HasValue &&
+                    x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
+                    x.URL == hashedData &&
+                    x.UserType == UserType.Player
+                );
+        }
     }
 }

@@ -211,5 +211,27 @@ namespace Apollo.Controllers
                 return BadRequest(error: new { errorCode = ErrorCode.MustBeFilled });
             }
         }
+
+        [HttpGet("/password-reset/{hashedData}")]
+        public async Task<IActionResult> PlayerForgetPasswordConfirmation([FromQuery] string hashedData)
+        {
+            if(!string.IsNullOrEmpty(hashedData))
+            {
+                bool confirm = await _playerService.PlayerForgetPasswordConfirmationPageControl(hashedData);
+                if(confirm)
+                {
+                    return Ok(true);
+                }
+                else
+                {
+                    return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
+                }
+            }
+            else
+            {
+                return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
+            }
+        }
+        
     }
 }
