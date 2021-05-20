@@ -206,5 +206,66 @@ namespace Apollo.Services
                 return false;
             }
         }
+
+        public async Task<bool> TeamControlByMail(string mailAddress)
+        {
+            return await _db.Players
+                .Where(x => !x.DeletedAt.HasValue && x.MailAddress == mailAddress)
+                .AnyAsync();
+        }
+
+        public async Task SendPasswordCode(string mailAddress)
+        {
+            Team teamData = await _db.Teams
+                .Where(x => !x.DeletedAt.HasValue&& x.MailAddress == mailAddress)
+                .FirstOrDefaultAsync();
+            
+            int confirmationCode = _methodService.GenerateRandomInt();
+            string url = await _methodService.GenerateRandomString(RequestType.ResetPassword);
+            webSiteUrl += url;
+
+            await _mailService.TeamSendPasswordCode(confirmationCode, webSiteUrl, teamData);
+            _db.PasswordResetRequests.Add(new PasswordResetRequest {
+                ConfirmationCode = confirmationCode,
+                CreatedAt = DateTime.Now,
+                URL = webSiteUrl,
+                UserId = teamData.Id,
+                UserType = UserType.Team
+            });
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<bool> TeamForgetPasswordConfirmationPageControl(string hashedData)
+        {
+            return await _db.PasswordResetRequests
+                .AnyAsync(
+                    x => !x.DeletedAt.HasValue &&
+                    x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
+                    x.URL == hashedData &&
+                    x.UserType == UserType.Team
+                );
+        }
+
+        public async Task<bool> TeamResetPassword(int confirmationCode, string hashedData, string password)
+        {
+            PasswordResetRequest resetPassword = await _db.PasswordResetRequests
+                .LastOrDefaultAsync(
+                    x => !x.DeletedAt.HasValue &&
+                    x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
+                    x.ConfirmationCode == confirmationCode &&
+                    x.URL == hashedData &&
+                    x.UserType == UserType.Team
+                );
+            if(resetPassword is not null)
+            {
+                resetPassword.DeletedAt = DateTime.Now;
+                Team teamData = await _db.Teams.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == resetPassword.UserId);
+                teamData.Password = BCrypt.Net.BCrypt.HashPassword(password);
+
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }

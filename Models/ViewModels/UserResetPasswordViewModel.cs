@@ -1,6 +1,6 @@
 namespace Apollo.ViewModels
 {
-    public class PlayerResetPasswordViewModel
+    public class UserResetPasswordViewModel
     {
         public string Name { get; set; }
         public int ConfirmationCode { get; set; }

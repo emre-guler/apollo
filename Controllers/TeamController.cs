@@ -149,5 +149,63 @@ namespace Apollo.Controllers
             }
             return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
         }
+
+        [HttpPost("/team-forget-password")]
+        public async Task<IActionResult> TeamForgetPassword([FromBody] string teamMailAdress)
+        {
+            if(!string.IsNullOrEmpty(teamMailAdress))
+            {
+                bool mailControl = await _teamService.TeamControlByMail(teamMailAdress);
+                if(mailControl)
+                {
+                    await _teamService.SendPasswordCode(teamMailAdress);
+                    return Ok(true);
+                }
+                else
+                {
+                    return BadRequest(error: new { errorCode = ErrorCode.UserNotFind });
+                }
+            }
+            else
+            {
+                return BadRequest(error: new { errorCode = ErrorCode.MustBeFilled });
+            }
+        }
+
+        [HttpGet("/password-reset/{hashedData}")]
+        public async Task<IActionResult> TeamForgetPasswordConfirmation([FromQuery] string hashedData)
+        {
+            if(!string.IsNullOrEmpty(hashedData))
+            {
+                bool pageConfirm = await _teamService.TeamForgetPasswordConfirmationPageControl(hashedData);
+                if(pageConfirm)
+                {
+                    return Ok(true);
+                }
+            }
+            return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
+        }
+
+        [HttpPost("/player-reset/{hashedData}")]
+        public async Task<IActionResult> TeamFOrgetPasswordConfirmation([FromQuery] string hashedData, [FromBody]  UserResetPasswordViewModel teamVM)
+        {
+            if(!string.IsNullOrEmpty(hashedData))
+            {
+                bool pageConfirm = await _teamService.TeamForgetPasswordConfirmationPageControl(hashedData);
+                if(pageConfirm)
+                {
+                    bool confirm = await _teamService.TeamResetPassword(teamVM.ConfirmationCode, hashedData, teamVM.Password);
+                    if(confirm)
+                    {
+                        return Ok(true);
+                    }
+                    else
+                    {
+                        return BadRequest(error: new { errorCode = ErrorCode.InvalidCode });
+                    }
+                }
+            }
+            return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
+        }
     }
 }

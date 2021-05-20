@@ -139,7 +139,7 @@ namespace Apollo.Services
 
         public async Task PlayerSendPasswordCode(int confirmationCode, string url, Player playerData)
         {
-            PlayerResetPasswordViewModel viewModel = new()
+            UserResetPasswordViewModel viewModel = new()
             {
                 Name = playerData.Name ?? "",
                 ConfirmationCode = confirmationCode,
@@ -161,6 +161,33 @@ namespace Apollo.Services
             };
 
             message.To.Add(playerData.MailAddress);
+            await mailServer.SendMailAsync(message);
+        }
+
+        public async Task TeamSendPasswordCode(int confirmationCode, string url, Team teamData)
+        {
+            UserResetPasswordViewModel viewModel = new()
+            {
+                Name = teamData.TeamName ?? "",
+                ConfirmationCode = confirmationCode,
+                Link = url
+            };
+            var bodyResult = await _viewRenderService.RenderToStringAsync("~/Pages/Mailing/TeamForgetPasswordMail.cshtml", viewModel);
+            MailMessage message = new()
+            {
+                From = new MailAddress(senderMailAddress),
+                Subject = "Apollo | Şifre Sıfırlama",
+                Body = bodyResult
+            };
+            SmtpClient mailServer = new()
+            {
+                Credentials = new NetworkCredential(senderMailAddress, senderMailPass),
+                Port = mailServerPort,
+                Host = mailServerHost,
+                EnableSsl = mailServerSSL
+            };
+
+            message.To.Add(teamData.TeamName);
             await mailServer.SendMailAsync(message);
         }
     }

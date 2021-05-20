@@ -227,7 +227,7 @@ namespace Apollo.Controllers
         }
 
         [HttpPost("/password-reset/{hashedData}")]
-        public async Task<IActionResult> PlayerForgetPasswordConfirmation([FromQuery] string hashedData, [FromBody] PlayerResetPasswordViewModel playerVM)
+        public async Task<IActionResult> PlayerForgetPasswordConfirmation([FromQuery] string hashedData, [FromBody] UserResetPasswordViewModel playerVM)
         {
             if(!string.IsNullOrEmpty(hashedData))
             {
