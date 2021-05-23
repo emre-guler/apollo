@@ -11,14 +11,15 @@ using System.Collections.Generic;
 using Apollo.Enums;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Apollo.DTO;
 
-namespace Apollo.Services 
+namespace Apollo.Services
 {
     public class PlayerService
     {
         private string webSiteUrl = "http://localhost:5001/";
         private readonly ApolloContext _db;
-        private readonly AuthenticationService _authenticationService; 
+        private readonly AuthenticationService _authenticationService;
         private readonly MailService _mailService;
         private readonly GeneralMethodsService _methodService;
 
@@ -37,7 +38,8 @@ namespace Apollo.Services
 
         public bool PlayerRegisterFormDataControl(PlayerRegisterViewModel playerVM)
         {
-            try {
+            try
+            {
                 playerVM.Name = playerVM.Name.Trim();
                 playerVM.Surname = playerVM.Surname.Trim();
                 playerVM.Nickname = playerVM.Nickname.Trim();
@@ -45,14 +47,14 @@ namespace Apollo.Services
                 playerVM.MailAddress = playerVM.MailAddress.Trim();
                 playerVM.Password = playerVM.Password.Trim();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Data);
                 return false;
             }
-            Regex regForMail = new(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"); 
+            Regex regForMail = new(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
             Regex regForPhone = new(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
-            if(
+            if (
                 (!String.IsNullOrEmpty(playerVM.Name)) &&
                 (!String.IsNullOrEmpty(playerVM.Surname)) &&
                 (!String.IsNullOrEmpty(playerVM.Nickname)) &&
@@ -61,7 +63,7 @@ namespace Apollo.Services
                 (!String.IsNullOrEmpty(playerVM.Password)) &&
                 (playerVM.Password.Length >= 8) &&
                 (regForMail.Match(playerVM.MailAddress).Success) &&
-                (regForPhone.Match(playerVM.PhoneNumber).Success) && 
+                (regForPhone.Match(playerVM.PhoneNumber).Success) &&
                 (playerVM.CityId != 0) &&
                 (playerVM.Gender != null)
             )
@@ -79,11 +81,11 @@ namespace Apollo.Services
             bool userControl = await _db.Players
                 .Where(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber)
                 .AnyAsync();
-            if(userControl)
+            if (userControl)
             {
                 return true;
-            }   
-            else 
+            }
+            else
             {
                 return false;
             }
@@ -91,7 +93,8 @@ namespace Apollo.Services
 
         public async Task CreatePlayer(PlayerRegisterViewModel playerVM)
         {
-            _db.Players.Add(new Player {
+            _db.Players.Add(new Player
+            {
                 BirtDate = playerVM.BirthDate,
                 CityId = playerVM.CityId,
                 CreatedAt = DateTime.Now,
@@ -106,18 +109,18 @@ namespace Apollo.Services
             await _db.SaveChangesAsync();
             await _mailService.PlayerWelcomeMail(playerVM.MailAddress);
         }
-        
+
         public async Task<Player> PlayerLoginControl(LoginViewModel playerVM)
         {
-            if(!String.IsNullOrEmpty(playerVM.MailAddress) || !String.IsNullOrEmpty(playerVM.Password))
+            if (!String.IsNullOrEmpty(playerVM.MailAddress) || !String.IsNullOrEmpty(playerVM.Password))
             {
                 Player player = await _db.Players
                     .Where(x => x.MailAddress == playerVM.MailAddress && !x.DeletedAt.HasValue)
                     .FirstOrDefaultAsync();
-                if(player is not null)
+                if (player is not null)
                 {
                     bool passwordControl = BCrypt.Net.BCrypt.Verify(playerVM.Password, player.Password);
-                    if(passwordControl)
+                    if (passwordControl)
                     {
                         return player;
                     }
@@ -126,147 +129,135 @@ namespace Apollo.Services
             return null;
         }
 
-        public string PlayerLogin(int playerId)
+        public string PlayerLogin(Player playerData)
         {
-           return _authenticationService.GenerateToken(playerId);
+            JwtClaimDTO data = new()
+            {
+                Id = playerData.Id,
+                Name = playerData.Name,
+                MailAddress = playerData.MailAddress,
+                UserType = UserType.Player
+            };
+            return _authenticationService.GenerateToken(data);
         }
 
-        public bool PlayerAuthenticator(string JWT, int userId)
+        public async Task<bool> BuilUpYourProfile(PlayerBuildUpViewModel playerVM, int playerId)
         {
-            string newToken = _authenticationService.GenerateToken(userId);
-            if(newToken == JWT)
+            Player playerData = await _db.Players
+                .Where(x => !x.DeletedAt.HasValue && x.Id == playerId)
+                .FirstOrDefaultAsync();
+            if (playerData is not null)
             {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public async Task<bool> BuilUpYourProfile(PlayerBuildUpViewModel playerVM, string userJWT, string playerId)
-        {
-            int id = Int16.Parse(playerId);
-            string newToken = _authenticationService.GenerateToken(id);
-            if(userJWT == newToken)
-            {
-                Player playerData = await _db.Players
-                    .Where(x => !x.DeletedAt.HasValue && x.Id == id)
-                    .FirstOrDefaultAsync();
-                
-                if(playerData is not null)
+                string profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/player", playerVM.ProfilePhoto.FileName);
+                using (Stream stream = new FileStream(profilePhotoPath, FileMode.Create))
                 {
-                    string profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/player", playerVM.ProfilePhoto.FileName);
-                    using (Stream stream = new FileStream(profilePhotoPath, FileMode.Create))
+                    await playerVM.ProfilePhoto.CopyToAsync(stream);
+                };
+                Photo newProfilePhoto = new()
+                {
+                    PhotoPath = profilePhotoPath,
+                    CreatedAt = DateTime.Now
+                };
+                _db.Photos.Add(newProfilePhoto);
+                await _db.SaveChangesAsync();
+                playerData.TwitterContact = playerVM.TwitterContact.Trim();
+                playerData.FacebookContact = playerVM.FacebookContact.Trim();
+                playerData.YoutubeContact = playerVM.YoutubeContact.Trim();
+                playerData.SteamContact = playerVM.SteamContact.Trim();
+                playerData.LolContact = playerVM.LolContact.Trim();
+                playerData.ValorantContact = playerVM.ValorantContact.Trim();
+                playerData.TwitchContact = playerVM.TwitchContact.Trim();
+                playerData.ProfilePhotoId = newProfilePhoto.Id;
+                playerData.SalaryException = playerVM.SalaryException;
+                playerData.IsActiveForTeam = playerVM.IsActiveForTeam;
+                foreach (var cityId in playerVM.AvailableCities)
+                {
+                    _db.PlayerCities.Add(new PlayerCity
                     {
-                        await playerVM.ProfilePhoto.CopyToAsync(stream);
+                        CityId = cityId,
+                        CreatedAt = DateTime.Now,
+                        PlayerId = playerId
+                    });
+                }
+                foreach (var game in playerVM.PlayerGames)
+                {
+                    _db.PlayerGames.Add(new PlayerGame
+                    {
+                        GameType = game,
+                        PlayerId = playerId,
+                        CreatedAt = DateTime.Now
+                    });
+                }
+                await _db.SaveChangesAsync();
+                foreach (var image in playerVM.UserPhotos)
+                {
+                    string photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/player", image.FileName);
+                    using (Stream stream = new FileStream(photoPath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
                     };
-                    Photo newProfilePhoto = new()
+                    Photo newPhoto = new Photo
                     {
-                        PhotoPath = profilePhotoPath,
+                        PhotoPath = photoPath,
                         CreatedAt = DateTime.Now
                     };
-                    _db.Photos.Add(newProfilePhoto);
                     await _db.SaveChangesAsync();
-                    playerData.TwitterContact = playerVM.TwitterContact.Trim();
-                    playerData.FacebookContact = playerVM.FacebookContact.Trim();
-                    playerData.YoutubeContact = playerVM.YoutubeContact.Trim();
-                    playerData.SteamContact = playerVM.SteamContact.Trim();
-                    playerData.LolContact = playerVM.LolContact.Trim();
-                    playerData.ValorantContact = playerVM.ValorantContact.Trim();
-                    playerData.TwitchContact = playerVM.TwitchContact.Trim();
-                    playerData.ProfilePhotoId = newProfilePhoto.Id;
-                    playerData.SalaryException = playerVM.SalaryException;
-                    playerData.IsActiveForTeam = playerVM.IsActiveForTeam;
-                    foreach(var cityId in playerVM.AvailableCities)
+                    _db.PlayerPhotos.Add(new PlayerPhoto
                     {
-                        _db.PlayerCities.Add(new PlayerCity 
-                        {
-                            CityId = cityId,
-                            CreatedAt = DateTime.Now,
-                            PlayerId = id
-                        });
-                    }
-                    foreach(var game in playerVM.PlayerGames)
-                    {
-                        _db.PlayerGames.Add(new PlayerGame 
-                        {
-                            GameType = game,
-                            PlayerId = id,
-                            CreatedAt = DateTime.Now
-                        });
-                    }
-                    await _db.SaveChangesAsync();
-                    foreach(var image in playerVM.UserPhotos)
-                    {
-                        string photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/player", image.FileName);
-                        using(Stream stream = new FileStream(photoPath, FileMode.Create))
-                        {
-                            await image.CopyToAsync(stream);
-                        };
-                        Photo newPhoto = new Photo
-                        {
-                            PhotoPath = photoPath,
-                            CreatedAt = DateTime.Now
-                        };
-                        await _db.SaveChangesAsync();
-                        _db.PlayerPhotos.Add(new PlayerPhoto 
-                        {
-                            PhotoId = newPhoto.Id,
-                            PlayerId = id,
-                            CreatedAt = DateTime.Now
-                        });
-                    }
-                    await _db.SaveChangesAsync();
-                    foreach(var video in playerVM.UserVideos)
-                    {
-                        string videoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/video", video.FileName);
-                        using(Stream stream = new FileStream(videoPath, FileMode.Create))
-                        {
-                            video.CopyTo(stream);
-                        }
-                        Video newVideo = new()
-                        {
-                            VideoPath = videoPath,
-                            CreatedAt = DateTime.Now
-                        };
-                        _db.Videos.Add(newVideo);
-                        await _db.SaveChangesAsync();
-                        _db.PlayerVideos.Add(new PlayerVideo 
-                        {
-                            VideoId = newVideo.Id,
-                            CreatedAt = DateTime.Now,
-                            PlayerId = id
-                        });
-                    }
-                    await _db.SaveChangesAsync();
-                    foreach(var achievement in playerVM.TournamentAchievements)
-                    {
-                        _db.Achievements.Add(new Achievement 
-                        {
-                            TournamentId = achievement.TournamentId,
-                            Rank = achievement.Rank,
-                            PlayerId = id,
-                            CreatedAt = DateTime.Now
-                        });
-                    }
-                    await _db.SaveChangesAsync();
-                    foreach(var oldTeam in playerVM.OldTeams)
-                    {
-                        _db.OldTeams.Add(new Entities.OldTeam 
-                        {
-                            TeamName = oldTeam.TeamName,
-                            Description = oldTeam.Description,
-                            StartedAt = oldTeam.StartedAt,
-                            EndedAt = oldTeam.EndedAt,
-                            Game = oldTeam.Game,
-                            PlayerId = id,
-                            CreatedAt = DateTime.Now
-                        });
-                    }
-                    await _db.SaveChangesAsync();
-                    return true;
+                        PhotoId = newPhoto.Id,
+                        PlayerId = playerId,
+                        CreatedAt = DateTime.Now
+                    });
                 }
+                await _db.SaveChangesAsync();
+                foreach (var video in playerVM.UserVideos)
+                {
+                    string videoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/video", video.FileName);
+                    using (Stream stream = new FileStream(videoPath, FileMode.Create))
+                    {
+                        video.CopyTo(stream);
+                    }
+                    Video newVideo = new()
+                    {
+                        VideoPath = videoPath,
+                        CreatedAt = DateTime.Now
+                    };
+                    _db.Videos.Add(newVideo);
+                    await _db.SaveChangesAsync();
+                    _db.PlayerVideos.Add(new PlayerVideo
+                    {
+                        VideoId = newVideo.Id,
+                        CreatedAt = DateTime.Now,
+                        PlayerId = playerId
+                    });
+                }
+                await _db.SaveChangesAsync();
+                foreach (var achievement in playerVM.TournamentAchievements)
+                {
+                    _db.Achievements.Add(new Achievement
+                    {
+                        TournamentId = achievement.TournamentId,
+                        Rank = achievement.Rank,
+                        PlayerId = playerId,
+                        CreatedAt = DateTime.Now
+                    });
+                }
+                await _db.SaveChangesAsync();
+                foreach (var oldTeam in playerVM.OldTeams)
+                {
+                    _db.OldTeams.Add(new Entities.OldTeam
+                    {
+                        TeamName = oldTeam.TeamName,
+                        Description = oldTeam.Description,
+                        StartedAt = oldTeam.StartedAt,
+                        EndedAt = oldTeam.EndedAt,
+                        Game = oldTeam.Game,
+                        PlayerId = playerId,
+                        CreatedAt = DateTime.Now
+                    });
+                }
+                await _db.SaveChangesAsync();
+                return true;
             }
             return false;
         }
@@ -282,10 +273,11 @@ namespace Apollo.Services
                 .FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == userId);
 
             int confirmationCode = _methodService.GenerateRandomInt();
-            string url = await _methodService.GenerateRandomString(RequestType.MailVerification);            
+            string url = await _methodService.GenerateRandomString(RequestType.MailVerification);
             webSiteUrl = webSiteUrl + url;
             await _mailService.PlayerSendMailVerification(confirmationCode, webSiteUrl, playerData);
-            _db.VerificationRequests.Add(new VerificationRequest {
+            _db.VerificationRequests.Add(new VerificationRequest
+            {
                 UserType = UserType.Player,
                 UserId = playerData.Id,
                 URL = url,
@@ -299,19 +291,19 @@ namespace Apollo.Services
         {
             var verification = await _db.VerificationRequests
                 .LastOrDefaultAsync(
-                    x => !x.DeletedAt.HasValue && 
+                    x => !x.DeletedAt.HasValue &&
                     x.CreatedAt.Value.AddHours(1) > DateTime.Now &&
                     x.ConfirmationCode == confirmationCode &&
                     x.URL == hashedData &&
                     x.UserType == UserType.Player
                 );
-            if(verification is not null)
+            if (verification is not null)
             {
                 verification.DeletedAt = DateTime.Now;
                 Player playerData = await _db.Players.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == verification.UserId);
                 playerData.IsMailVerified = true;
                 await _db.SaveChangesAsync();
-                
+
                 return true;
             }
             else
@@ -335,7 +327,7 @@ namespace Apollo.Services
         {
             Player playerData = await _db.Players
                 .FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == userId);
-            if(playerData is not null)
+            if (playerData is not null)
             {
                 playerData.IsActiveForTeam = !playerData.IsActiveForTeam;
                 await _db.SaveChangesAsync();
@@ -351,13 +343,13 @@ namespace Apollo.Services
         {
             Player playerData = await _db.Players
                 .FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == userId);
-            if(playerData is not null)
+            if (playerData is not null)
             {
                 playerData.DeletedAt = DateTime.Now;
                 await _db.SaveChangesAsync();
                 return true;
             }
-            else 
+            else
             {
                 return false;
             }
@@ -375,13 +367,14 @@ namespace Apollo.Services
             Player playerData = await _db.Players
                 .Where(x => !x.DeletedAt.HasValue && x.MailAddress == mailAddress)
                 .FirstOrDefaultAsync();
-            
+
             int confirmationCode = _methodService.GenerateRandomInt();
-            string url = await _methodService.GenerateRandomString(RequestType.ResetPassword);            
+            string url = await _methodService.GenerateRandomString(RequestType.ResetPassword);
             webSiteUrl = webSiteUrl + url;
 
             await _mailService.PlayerSendPasswordCode(confirmationCode, webSiteUrl, playerData);
-            _db.PasswordResetRequests.Add(new PasswordResetRequest {
+            _db.PasswordResetRequests.Add(new PasswordResetRequest
+            {
                 ConfirmationCode = confirmationCode,
                 CreatedAt = DateTime.Now,
                 URL = webSiteUrl,
@@ -412,12 +405,12 @@ namespace Apollo.Services
                     x.URL == hashedData &&
                     x.UserType == UserType.Player
                 );
-            if(resetPassword is not null)
+            if (resetPassword is not null)
             {
                 resetPassword.DeletedAt = DateTime.Now;
                 Player playerData = await _db.Players.FirstOrDefaultAsync(x => !x.DeletedAt.HasValue && x.Id == resetPassword.UserId);
                 playerData.Password = BCrypt.Net.BCrypt.HashPassword(password);
-                
+
                 await _db.SaveChangesAsync();
                 return true;
             }

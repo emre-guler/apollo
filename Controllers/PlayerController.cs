@@ -8,12 +8,15 @@ using Apollo.Enums;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Linq;
 
-namespace Apollo.Controllers 
+namespace Apollo.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PlayerController : ControllerBase 
+    public class PlayerController : ControllerBase
     {
         readonly ApolloContext _db;
         readonly PlayerService _playerService;
@@ -30,41 +33,39 @@ namespace Apollo.Controllers
             _authenticationService = authenticationService;
         }
 
+        [AllowAnonymous]
         [HttpPost("/player-register")]
-        public async Task<IActionResult> PlayerRegister([FromForm] PlayerRegisterViewModel playerVM) 
+        public async Task<IActionResult> PlayerRegister([FromForm] PlayerRegisterViewModel playerVM)
         {
             bool controlResult = _playerService.PlayerRegisterFormDataControl(playerVM);
-            if(controlResult)
+            if (controlResult)
             {
                 bool newUserControl = await _playerService.NewAccountControl(playerVM.MailAddress, playerVM.PhoneNumber);
-                if(newUserControl)
+                if (newUserControl)
                 {
                     await _playerService.CreatePlayer(playerVM);
                     return Ok(true);
                 }
-                else 
+                else
                 {
                     return BadRequest(error: new { errorCode = ErrorCode.UserExists });
                 }
             }
-            else 
+            else
             {
                 return BadRequest(error: new { errorCode = ErrorCode.MustBeFilled });
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("/player-login")]
         public async Task<IActionResult> PlayerLogin([FromForm] LoginViewModel playerVM)
         {
             Player userControl = await _playerService.PlayerLoginControl(playerVM);
-            if(userControl is not null)
-            { 
-                string userJWT = _playerService.PlayerLogin(userControl.Id);
-                Response.Cookies.Append("apolloJWT", userJWT, new CookieOptions 
-                {
-                    HttpOnly = true
-                });
-                Response.Cookies.Append("apolloPlayerId", userControl.Id.ToString(), new CookieOptions 
+            if (userControl is not null)
+            {
+                string userJWT = _playerService.PlayerLogin(userControl);
+                Response.Cookies.Append("apolloJWT", userJWT, new CookieOptions
                 {
                     HttpOnly = true
                 });
@@ -73,130 +74,142 @@ namespace Apollo.Controllers
             return BadRequest(error: new { errorCode = ErrorCode.InvalidCredentials });
         }
 
+        [Authorize]
         [HttpPost("/player-logout")]
         public IActionResult PlayerLogout()
         {
-            Response.Cookies.Delete("apolloJWT");
-            Response.Cookies.Delete("apolloPlayerId");
             return Ok(true);
         }
 
+        [Authorize]
         [HttpPost("/player-buildup-profile")]
         public async Task<IActionResult> PlayerBuildUpProfile([FromForm] PlayerBuildUpViewModel playerVM)
         {
-            string userJWT = Request.Cookies["apolloJWT"];
-            string userId = Request.Cookies["apolloPlayerId"];
-            if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var userData = _authenticationService.GetUserData(claims);
+            if (userData is not null && userData.UserType == UserType.Player)
             {
-                bool control = _playerService.PlayerAuthenticator(userJWT, Int16.Parse(userId));
-                if(control)
+                bool result = await _playerService.BuilUpYourProfile(playerVM, userData.Id);
+                if (result)
                 {
-                    bool result = await _playerService.BuilUpYourProfile(playerVM, userJWT, userId);
-                    if(result)
-                    {
-                        return Ok(true);
-                    }
+                    return Ok(true);
                 }
             }
             return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
         }
 
+        [Authorize]
         [HttpGet("/player-mail-verification")]
         public async Task<IActionResult> PlayerMailVerificationRequest()
         {
-            string userJWT = Request.Cookies["apolloJWT"];
-            string userId = Request.Cookies["apolloPlayerId"];
-            if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var userData = _authenticationService.GetUserData(claims);
+            if (userData is not null && userData.UserType == UserType.Player)
             {
-                bool control = _playerService.PlayerAuthenticator(userJWT, Int16.Parse(userId));
-                if(control)
+                bool verifyControl = await _playerService.PlayerMailVerificationControl(userData.Id);
+                if (verifyControl)
                 {
-                    bool verifyControl = await _playerService.PlayerMailVerificationControl(Int16.Parse(userId));
-                    if(verifyControl)
-                    {
-                        await _playerService.SendMailVerification(Int16.Parse(userId));
-                        return Ok(true);
-                    }
+                    await _playerService.SendMailVerification(userData.Id);
+                    return Ok(true);
                 }
             }
             return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
         }
 
+        [Authorize]
         [HttpGet("/verification/{hashedData}")]
         public async Task<IActionResult> PlayerMailVerifyPage([FromQuery] string hashedData)
         {
-            bool confirm = await _playerService.PlayerMailVerificationPageControl(hashedData);
-            if(confirm)
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var userData = _authenticationService.GetUserData(claims);
+            if (userData is not null && userData.UserType == UserType.Player)
             {
-                return Ok(true);
-            }
-            else 
-            {
-                return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
-            }
-        }
-
-        [HttpPost("/verification/{hashedData}")]
-        public async Task<IActionResult> PlayerMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
-        {
-            bool pageConfirm = await _playerService.PlayerMailVerificationPageControl(hashedData);
-            if(pageConfirm)
-            {
-                bool confirm = await _playerService.PlayerMailConfirmation(confirmationCode, hashedData);
-                if(confirm)
+                bool confirm = await _playerService.PlayerMailVerificationPageControl(hashedData);
+                if (confirm)
                 {
                     return Ok(true);
-                }   
+                }
                 else
                 {
-                    return BadRequest(error: new { erroCode = ErrorCode.InvalidCode });
-                }
-            }
-            else
-            {
-                return BadRequest(error: new { erroCode = ErrorCode.LinkExpired });
-            }
-        }
-
-        [HttpGet("/player-update-state")]
-        public async Task<IActionResult> PlayerUpdateState()
-        {
-            string userJWT = Request.Cookies["apolloJWT"];
-            string userId = Request.Cookies["apolloPlayerId"];
-            if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
-            {
-                bool control = await _playerService.PlayerUpdateState(Int16.Parse(userId));
-                if(control)
-                {
-                    return Ok(true);
-                }
-            }
-            return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
-        }
-
-        [HttpGet("/player-freeze-account")]
-        public async Task<IActionResult> PlayerFreezeAccount()
-        {
-            string userJWT = Request.Cookies["apolloJWT"];
-            string userId = Request.Cookies["apolloPlayerId"];
-            if(!string.IsNullOrEmpty(userJWT) && !string.IsNullOrEmpty(userId))
-            {
-                bool control = await _playerService.FreezePlayerAccount(Int16.Parse(userId));
-                if(control)
-                {
-                    return Ok(true);
+                    return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
                 }
             }
             return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
         }
 
+        [Authorize]
+        [HttpPost("/verification/{hashedData}")]
+        public async Task<IActionResult> PlayerMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
+        {
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var userData = _authenticationService.GetUserData(claims);
+            if (userData is not null && userData.UserType == UserType.Player)
+            {
+                bool pageConfirm = await _playerService.PlayerMailVerificationPageControl(hashedData);
+                if (pageConfirm)
+                {
+                    bool confirm = await _playerService.PlayerMailConfirmation(confirmationCode, hashedData);
+                    if (confirm)
+                    {
+                        return Ok(true);
+                    }
+                    else
+                    {
+                        return BadRequest(error: new { erroCode = ErrorCode.InvalidCode });
+                    }
+                }
+                else
+                {
+                    return BadRequest(error: new { erroCode = ErrorCode.LinkExpired });
+                }
+            }
+            return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
+        }
+
+        [Authorize]
+        [HttpGet("/player-update-state")]
+        public async Task<IActionResult> PlayerUpdateState()
+        {
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var userData = _authenticationService.GetUserData(claims);
+            if (userData is not null && userData.UserType == UserType.Player)
+            {
+                bool control = await _playerService.PlayerUpdateState(userData.Id);
+                if (control)
+                {
+                    return Ok(true);
+                }
+                return BadRequest(error: new { errorCode = ErrorCode.UserNotFind });
+            }
+            return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
+        }
+
+        [Authorize]
+        [HttpGet("/player-freeze-account")]
+        public async Task<IActionResult> PlayerFreezeAccount()
+        {
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var userData = _authenticationService.GetUserData(claims);
+            if (userData is not null && userData.UserType == UserType.Player)
+            {
+                bool control = await _playerService.FreezePlayerAccount(userData.Id);
+                if (control)
+                {
+                    return Ok(true);
+                }
+                return BadRequest(error: new { erroCode = ErrorCode.UserNotFind });
+            }
+            return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
+        }
+
+        [AllowAnonymous]
         [HttpPost("/player-forget-password")]
         public async Task<IActionResult> PlayerForgetPassword([FromBody] string playerMailAddress)
         {
-            if(!string.IsNullOrEmpty(playerMailAddress))
+            if (!string.IsNullOrEmpty(playerMailAddress))
             {
                 bool mailControl = await _playerService.PlayerControlByMail(playerMailAddress);
-                if(mailControl)
+                if (mailControl)
                 {
                     await _playerService.SendPasswordCode(playerMailAddress);
                     return Ok(true);
@@ -212,13 +225,14 @@ namespace Apollo.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("/password-reset/{hashedData}")]
         public async Task<IActionResult> PlayerForgetPasswordConfirmation([FromQuery] string hashedData)
         {
-            if(!string.IsNullOrEmpty(hashedData))
+            if (!string.IsNullOrEmpty(hashedData))
             {
                 bool pageConfirm = await _playerService.PlayerForgetPasswordConfirmationPageControl(hashedData);
-                if(pageConfirm)
+                if (pageConfirm)
                 {
                     return Ok(true);
                 }
@@ -226,16 +240,18 @@ namespace Apollo.Controllers
             return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
         }
 
+
+        [AllowAnonymous]
         [HttpPost("/password-reset/{hashedData}")]
         public async Task<IActionResult> PlayerForgetPasswordConfirmation([FromQuery] string hashedData, [FromBody] UserResetPasswordViewModel playerVM)
         {
-            if(!string.IsNullOrEmpty(hashedData))
+            if (!string.IsNullOrEmpty(hashedData))
             {
                 bool pageConfirm = await _playerService.PlayerForgetPasswordConfirmationPageControl(hashedData);
-                if(pageConfirm)
+                if (pageConfirm)
                 {
                     bool confirm = await _playerService.PlayerResetPassword(playerVM.ConfirmationCode, hashedData, playerVM.Password);
-                    if(confirm)
+                    if (confirm)
                     {
                         return Ok(true);
                     }
@@ -243,7 +259,7 @@ namespace Apollo.Controllers
                     {
                         return BadRequest(error: new { errorCode = ErrorCode.InvalidCode });
                     }
-                } 
+                }
             }
             return BadRequest(error: new { erroCode = ErrorCode.LinkExpired });
         }

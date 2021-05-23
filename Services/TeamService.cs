@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Apollo.Data;
+using Apollo.DTO;
 using Apollo.Entities;
 using Apollo.Enums;
 using Apollo.ViewModels;
@@ -114,22 +115,16 @@ namespace Apollo.Services
             return null;
         }
 
-        public string TeamLogin(int teamId)
+        public string TeamLogin(Team teamData)
         {
-            return _authenticationService.GenerateToken(teamId);
-        }
-
-        public bool TeamAuthenticator(string JWT, int teamId)
-        {
-            string newToken = _authenticationService.GenerateToken(teamId);
-            if(newToken == JWT)
+            JwtClaimDTO data = new()
             {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+                Id = teamData.Id,
+                MailAddress = teamData.MailAddress,
+                Name = teamData.TeamName,
+                UserType = UserType.Team
+            };
+            return _authenticationService.GenerateToken(data);
         }
 
         public async Task<bool> TeamMailVerificationControl(int teamId)
