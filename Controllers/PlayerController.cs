@@ -78,6 +78,7 @@ namespace Apollo.Controllers
         [HttpPost("/player-logout")]
         public IActionResult PlayerLogout()
         {
+            Response.Cookies.Delete("apolloJWT");
             return Ok(true);
         }
 

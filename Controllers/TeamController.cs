@@ -65,10 +65,6 @@ namespace Apollo.Controllers
                 {
                     HttpOnly = true
                 });
-                Response.Cookies.Append("apolloTeamId", teamControl.Id.ToString(), new CookieOptions
-                {
-                    HttpOnly = true
-                });
                 return Ok(true);
             }
             else
@@ -81,6 +77,7 @@ namespace Apollo.Controllers
         [HttpPost("/team-logout")]
         public IActionResult TeamLogout()
         {
+            Response.Cookies.Delete("apolloJWT");
             return Ok(true);
         }
 

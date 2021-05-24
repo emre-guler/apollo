@@ -29,7 +29,7 @@ namespace Apollo.Services
                 issuer: secureKey,
                 audience: secureKey,
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddHours(2),
                 signingCredentials: credentials
             );
 
