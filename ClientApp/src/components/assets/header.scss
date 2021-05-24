@@ -1,0 +1,12 @@
+@import './mainColors.scss';
+
+.mainHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    max-height: 100px;
+}
+.logoContainer {
+    max-height: 100px;
+}

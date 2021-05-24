@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Header from './MainComponents/Header';
 
 export class Home extends Component {
   static displayName = Home.name;
@@ -6,7 +7,7 @@ export class Home extends Component {
   render () {
     return (
       <div>
-        <p>Apollo, hello world!</p>
+        <Header />
       </div>
     );
   }
