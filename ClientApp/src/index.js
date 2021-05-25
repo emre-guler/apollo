@@ -3,6 +3,7 @@ import Home  from "./pages/Home/Home";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { Route } from "react-router";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const baseUrl = document.getElementsByTagName("base")[0].getAttribute("href");
 const rootElement = document.getElementById("root");
