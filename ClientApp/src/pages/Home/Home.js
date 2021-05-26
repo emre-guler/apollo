@@ -4,9 +4,9 @@ import "../../assets/style.scss";
 
 const Home = () => {
   return (
-    <div>
+    <>
       <Header />
-    </div>
+    </>
   );
 };
 

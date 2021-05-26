@@ -1,19 +1,37 @@
 header {
   background-color: transparent;
 
-  .navElementContainer 
-  {
-    display: flex;
-    flex-direction: column;
-    vertical-align: center;
+  .headerContent {
     margin-top: 15px;
-    Button
-    {
-      padding-top: 5px;
-      padding-bottom: 5px;
-      padding-left: 15px;
-      padding-right: 15px;
-      border-radius: 25px;
+    display: flex;
+    flex-direction: row-reverse;
+
+    div {
+      margin-left: 15px;
+    }
+
+    Button {
+      padding: 10px 25px;
+      border-radius: 30px;
+
+      SVG {
+        margin: 5px;
+      }
+    }
+
+    .languageOptions {
+      display: block;
+      ul {
+        margin: 15px;
+
+        li {
+          float: left;
+          padding-right: 15px;
+        }
+        li:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
 }

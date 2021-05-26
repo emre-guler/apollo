@@ -1,3 +1,4 @@
 {
-    "RegisterAsUser": "Register (Player)"
+    "Register": "Register",
+    "Login": "Login"
 }
