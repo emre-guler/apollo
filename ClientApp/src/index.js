@@ -1,18 +1,25 @@
 import React from 'react';
-import Home  from "./pages/Home/Home";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { Route } from "react-router";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const baseUrl = document.getElementsByTagName("base")[0].getAttribute("href");
+import Context from './context';
+import Home  from "./pages/Home/Home";
+
 const rootElement = document.getElementById("root");
 
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Route path="/" component={Home} />
+    </BrowserRouter>
+  )
+}
+
 ReactDOM.render(
-  <BrowserRouter basename={baseUrl}>
-    <div>
-      <Route exact path="/" component={Home} />
-    </div>
-  </BrowserRouter>,
+  <Context>
+    <App />
+  </Context>,
   rootElement
 );
