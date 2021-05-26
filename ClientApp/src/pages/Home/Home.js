@@ -6,7 +6,6 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <p>Emre Güler</p>
     </div>
   );
 };

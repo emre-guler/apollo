@@ -1,3 +1,19 @@
 header {
   background-color: transparent;
+
+  .navElementContainer 
+  {
+    display: flex;
+    flex-direction: column;
+    vertical-align: center;
+    margin-top: 15px;
+    Button
+    {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 15px;
+      padding-right: 15px;
+      border-radius: 25px;
+    }
+  }
 }
