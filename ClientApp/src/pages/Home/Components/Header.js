@@ -1,26 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import { BiLogIn } from "react-icons/bi";
+import { AiOutlineUserAdd, AiOutlineLogin } from "react-icons/ai";
+import { FaBars } from "react-icons/fa";
 import Cookies from "js-cookie";
 import "../assets/header.scss";
 
 const Header = () => {
-  const selectedLanguage = Cookies.get("i18next");
-  const [language, setLanguage] = useState(selectedLanguage);
+  const [language, setLanguage] = useState();
   const { t } = useTranslation();
+
+  useLayoutEffect(() => {
+    setLanguage(Cookies.get("i18next"));
+  }, []);
+
   return (
     <header>
       <Container className="container">
         <Row>
-          <Col md xl={4}>
+          <Col xs md xl={4} className="logoContent">
             <img
               src={require("../assets/apolloLogo.png")}
               alt="Apollo's Logo"
             />
           </Col>
-          <Col md xl={8} className={"headerContent"}>
+          <Col xs md xl={8} className={"headerContent"}>
             <div className={"languageOptions"}>
               <ul>
                 <li
@@ -51,7 +55,7 @@ const Header = () => {
             </div>
             <div>
               <Button variant="outline-light">
-                <BiLogIn />
+                <AiOutlineLogin />
                 {t("Login")}
               </Button>
             </div>
@@ -61,6 +65,9 @@ const Header = () => {
                 {t("Register")}
               </Button>
             </div>
+          </Col>
+          <Col xs md xl={8} className={"mobileHeaderContent"}>
+            <FaBars size={28} />
           </Col>
         </Row>
       </Container>

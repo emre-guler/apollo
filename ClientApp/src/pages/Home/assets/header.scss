@@ -1,5 +1,30 @@
+$breakPoint-Tablet: 995px;
+$breakPoin-Mobile: 620px;
+
 header {
   background-color: transparent;
+
+  .logoContent {
+     margin-top: 15px;
+    img {
+      max-width: 225px;
+    }
+  }
+  
+  .mobileHeaderContent {
+    display: none !important;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+  @media (max-width: $breakPoint-Tablet) {
+    .mobileHeaderContent {
+      display: flex !important;
+    }
+
+    .headerContent {
+      display: none !important;
+    }
+  }
 
   .headerContent {
     margin-top: 15px;
