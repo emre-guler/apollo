@@ -27,7 +27,7 @@ header {
   }
 
   .headerContent {
-    margin-top: 15px;
+    margin-top: 20px;
     display: flex;
     flex-direction: row-reverse;
 
@@ -36,7 +36,7 @@ header {
     }
 
     Button {
-      padding: 10px 25px;
+      padding: 5px 20px;
       border-radius: 30px;
 
       SVG {
@@ -47,14 +47,16 @@ header {
     .languageOptions {
       display: block;
       ul {
-        margin: 15px;
+        margin: 10px;
 
         li {
           float: left;
           padding-right: 15px;
-        }
-        li:hover {
-          cursor: pointer;
+          color: white;
+          
+          &:hover {
+            cursor: pointer;
+          }
         }
       }
     }

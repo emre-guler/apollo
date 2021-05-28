@@ -60,7 +60,7 @@ const Header = () => {
               </Button>
             </div>
             <div>
-              <Button variant="light">
+              <Button variant="outline-light">
                 <AiOutlineUserAdd />
                 {t("Register")}
               </Button>
