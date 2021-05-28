@@ -1,0 +1,19 @@
+.contentContainer {
+    margin-top: 50px;
+    display: flex;
+
+    .mainContentContainer {
+        padding: 15px;
+        h1 {
+            color: white;
+        }
+
+        h1:first-child {
+            font-size: 42px;
+        }
+
+        .gameName {
+            font-size: 72px;
+        }
+    }
+}

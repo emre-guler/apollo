@@ -16,15 +16,15 @@ const Header = () => {
 
   return (
     <header>
-      <Container className="container">
+      <Container>
         <Row>
-          <Col xs md xl={4} className="logoContent">
+          <Col xs={4} md={4} xl={4} className="logoContent">
             <img
               src={require("../../assets/apolloLogo.png")}
               alt="Apollo's Logo"
             />
           </Col>
-          <Col xs md xl={8} className={"headerContent"}>
+          <Col xs={8} md={8} xl={8} className={"headerContent"}>
             <div className={"languageOptions"}>
               <ul>
                 <li
