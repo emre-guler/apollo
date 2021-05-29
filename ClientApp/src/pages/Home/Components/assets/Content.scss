@@ -51,9 +51,43 @@ section {
             }
         }
 
+        .awssld {
+            --loader-bar-color: none;
+        }
         .awssld__content {
             background-color: transparent !important;
         }
+
         
+    }
+}
+
+.secondSection {
+    background-color: white;
+    display: flex;
+    padding: 50px;
+    
+    .altContentContainer {
+        h3 {
+            text-align: center;
+            color: #3c4858;
+            font-size: 28px;
+        }
+        
+        .listContainer {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            margin-top: 75px;
+        }
+
+        .card {
+            padding: 15px;
+            padding-bottom: 50px;
+
+            .card-text {
+                color: #8492a6;
+            }
+        }
     }
 }

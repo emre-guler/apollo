@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import Typed from "react-typed";
 import AwesomeSlider from "react-awesome-slider";
@@ -43,6 +43,45 @@ const Content = () => {
                   <div data-src="/assets/teamLogosLOL.png" />
                   <div data-src="/assets/teamLogosValorant.png" />
                 </AutoplaySlider>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+      <section className={"secondSection"}>
+        <Container>
+          <Row>
+            <Col xs={12} md={12} xl={12}>
+              <div className={"altContentContainer"}>
+                <div className={"altContentTitle"}>
+                  <h3>{t("HowIsItWork")}</h3>
+                </div>
+                <div className={"listContainer"}>
+                  <div>
+                    <Card style={{ width: "18rem" }}>
+                      <Card.Body>
+                        <Card.Title>{t("RegisterApollo")}</Card.Title>
+                        <Card.Text>{t("RegisterToApolloContext")}</Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                  <div>
+                    <Card style={{ width: "18rem" }}>
+                      <Card.Body>
+                        <Card.Title>{t("ShowYourSkills")}</Card.Title>
+                        <Card.Text>{t("ShowYourSkillsContext")}</Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                  <div>
+                    <Card style={{ width: "18rem" }}>
+                      <Card.Body>
+                        <Card.Title>{t("RegisterApollo")}</Card.Title>
+                        <Card.Text>{t("RegisterToApolloContext")}</Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                </div>
               </div>
             </Col>
           </Row>
