@@ -6,7 +6,11 @@
     "WannaToJoinUs": "Wanna to join us?",
     "HowIsItWork": "How is Apollo Work?",
     "RegisterApollo": "Register to Apollo!",
-    "RegisterToApolloContext": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    "RegisterToApolloContent": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     "ShowYourSkills": "Show Your Skills",
-    "ShowYourSkillsContext": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+    "ShowYourSkillsContent": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    "FindTeam": "Find Your Team",
+    "FindTeamContent": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    "AltTitle": "Apollo Shows Your Skills to Teams",
+    "AltContent": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
 }

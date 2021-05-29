@@ -53,7 +53,7 @@ const Content = () => {
           <Row>
             <Col xs={12} md={12} xl={12}>
               <div className={"altContentContainer"}>
-                <div className={"altContentTitle"}>
+                <div>
                   <h3>{t("HowIsItWork")}</h3>
                 </div>
                 <div className={"listContainer"}>
@@ -61,7 +61,7 @@ const Content = () => {
                     <Card style={{ width: "18rem" }}>
                       <Card.Body>
                         <Card.Title>{t("RegisterApollo")}</Card.Title>
-                        <Card.Text>{t("RegisterToApolloContext")}</Card.Text>
+                        <Card.Text>{t("RegisterToApolloContent")}</Card.Text>
                       </Card.Body>
                     </Card>
                   </div>
@@ -69,18 +69,36 @@ const Content = () => {
                     <Card style={{ width: "18rem" }}>
                       <Card.Body>
                         <Card.Title>{t("ShowYourSkills")}</Card.Title>
-                        <Card.Text>{t("ShowYourSkillsContext")}</Card.Text>
+                        <Card.Text>{t("ShowYourSkillsContent")}</Card.Text>
                       </Card.Body>
                     </Card>
                   </div>
                   <div>
                     <Card style={{ width: "18rem" }}>
                       <Card.Body>
-                        <Card.Title>{t("RegisterApollo")}</Card.Title>
-                        <Card.Text>{t("RegisterToApolloContext")}</Card.Text>
+                        <Card.Title>{t("FindTeam")}</Card.Title>
+                        <Card.Text>{t("FindTeamContent")}</Card.Text>
                       </Card.Body>
                     </Card>
                   </div>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+      <section className={"thirdSection"}>
+        <Container>
+          <Row>
+            <Col xs={12} md={12} xl={12}>
+              <div className={"altContentContainer"}>
+                <div>
+                  <h3 className={"lightTitle"}>{t("AltTitle")}</h3>
+                </div>
+                <div className={"paragraphContainer"}>
+                  <p>{t("AltContent")}</p>
+                  <br />
+                  <p>{t("AltContent")}</p>
                 </div>
               </div>
             </Col>
