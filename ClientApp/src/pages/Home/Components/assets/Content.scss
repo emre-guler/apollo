@@ -1,19 +1,59 @@
+$fontColor: white;
+
+section {
+    background-color: #121212;
+    padding-bottom: 50px;
+}
 .contentContainer {
-    margin-top: 50px;
+    padding-top: 125px;
     display: flex;
 
     .mainContentContainer {
-        padding: 15px;
+        padding: 25px;
         h1 {
-            color: white;
+            color: $fontColor;
         }
 
         h1:first-child {
             font-size: 42px;
         }
 
+        .altMessage {
+            font-size: 24px;
+        }
+
         .gameName {
             font-size: 72px;
+            color: $fontColor;
         }
+
+    }
+
+    @media (max-width: 1200px)
+    {
+        .mainContentContainer {
+            text-align: center;
+        }
+    }
+
+    .bannerContentContainer {
+        padding: 25px;
+
+        .sliderLogos {
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        @media (max-width: 1200px)
+        {
+            .sliderLogos {
+                width: 100%;
+            }
+        }
+
+        .awssld__content {
+            background-color: transparent !important;
+        }
+        
     }
 }
