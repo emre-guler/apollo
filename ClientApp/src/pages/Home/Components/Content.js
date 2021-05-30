@@ -98,9 +98,6 @@ const Content = () => {
                 <div className={"paragraphContainer"}>
                   <p>{t("AltContent")}</p>
                 </div>
-                <div>
-                  <p>{t("SecondAltContent")}</p>
-                </div>
               </div>
             </Col>
           </Row>
@@ -111,7 +108,7 @@ const Content = () => {
           <Row>
             <Col xs={12} md={6} xl={6}>
               <div className={"imageContentContainer"}>
-                <img src="" alt="Apollo content image" />
+                <img  alt="Apollo content image" />
               </div>
             </Col>
             <Col xs={12} md={6} xl={6}>
