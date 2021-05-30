@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { AiOutlineUserAdd, AiOutlineLogin } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
 import Cookies from "js-cookie";
-import "./assets/header.scss";
+import "./assets/Header.scss";
 
 const Header = () => {
   const [language, setLanguage] = useState();
@@ -20,7 +20,7 @@ const Header = () => {
         <Row>
           <Col xs={4} md={4} xl={4} className="logoContent">
             <img
-              src={require("../../assets/apolloLogo.png")}
+              src={require("./assets/apolloLogo.png")}
               alt="Apollo's Logo"
             />
           </Col>

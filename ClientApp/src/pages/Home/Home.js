@@ -1,13 +1,14 @@
 import React from "react";
-import Header from "../../Components/Header/Header";
+import Header from "./Components/Header";
 import Content from './Components/Content';
-import "../../assets/style.scss";
+import Footer from './Components/Footer';
 
 const Home = () => {
   return (
     <>
       <Header />
       <Content />
+      <Footer />
     </>
   );
 };
