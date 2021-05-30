@@ -23,5 +23,10 @@
     "AboutUs": "About Us",
     "GPDR": "GPDR",
     "TermsOfService": "Terms Of Service",
-    "PrivacyAgreement": "Privacy Aggreement"
+    "PrivacyAgreement": "Privacy Aggreement",
+    "SelectUserTypeTitle": "Select User Type",
+    "SelectUserTypeContent": "Select your user type for attend the Apollo World.",
+    "RegisterAsPlayer": "Register as Player",
+    "RegisterAsTeam": "Register as Team",
+    "DoYouHaveAccount": "Already have an account?"
 }

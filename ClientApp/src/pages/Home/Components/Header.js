@@ -3,6 +3,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { AiOutlineUserAdd, AiOutlineLogin } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import "./assets/Header.scss";
 
@@ -19,10 +20,12 @@ const Header = () => {
       <Container>
         <Row>
           <Col xs={4} md={4} xl={4} className="logoContent">
-            <img
-              src={require("./assets/apolloLogo.png")}
-              alt="Apollo's Logo"
-            />
+            <Link to="/">
+              <img
+                src={require("./assets/apolloLogo.png")}
+                alt="Apollo's Logo"
+              />
+            </Link>
           </Col>
           <Col xs={8} md={8} xl={8} className={"headerContent"}>
             <div className={"languageOptions"}>
@@ -33,7 +36,7 @@ const Header = () => {
                     if (language === "en") {
                       Cookies.set("i18next", "tr");
                       setLanguage("en");
-                      window.location.href = "/";
+                      window.location.reload();
                     }
                   }}
                 >
@@ -45,7 +48,7 @@ const Header = () => {
                     if (language === "tr") {
                       Cookies.set("i18next", "en");
                       setLanguage("tr");
-                      window.location.href = "/";
+                      window.location.reload();
                     }
                   }}
                 >
@@ -60,7 +63,12 @@ const Header = () => {
               </Button>
             </div>
             <div>
-              <Button variant="outline-light">
+              <Button
+                variant="outline-light"
+                onClick={() => {
+                  window.location.href = "/register";
+                }}
+              >
                 <AiOutlineUserAdd />
                 {t("Register")}
               </Button>

@@ -11,7 +11,9 @@ import HttpApi from "i18next-http-backend";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Context from "./context";
+
 import Home from "./pages/Home/Home";
+import Register from './pages/Register/Register';
 
 const rootElement = document.getElementById("root");
 
@@ -39,7 +41,8 @@ i18n
 const App = () => {
   return (
     <BrowserRouter>
-      <Route path="/" component={Home} />
+      <Route exact path="/" component={Home} />
+      <Route exact path="/register" component={Register} /> 
     </BrowserRouter>
   );
 };

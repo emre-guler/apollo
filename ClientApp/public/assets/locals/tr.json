@@ -23,5 +23,10 @@
     "AboutUs": "Hakkımızda",
     "GPDR": "GPDR",
     "TermsOfService": "Kullanıcı Sözleşmesi",
-    "PrivacyAgreement": "Gizlilik Sözleşmesi"
+    "PrivacyAgreement": "Gizlilik Sözleşmesi",
+    "SelectUserTypeTitle": "Kullanıcı Tipinizi Seçin",
+    "SelectUserTypeContent": "Apollo dünyasına katılabilmek için, kullanıcı tipinizi seçin.",
+    "RegisterAsPlayer": "Kayıt Ol (Oyuncu)",
+    "RegisterAsTeam": "Kayıt Ol (Takım)",
+    "DoYouHaveAccount": "Zaten bir hesabın var mı?"
 }
