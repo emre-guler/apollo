@@ -1,8 +1,11 @@
 $fontColor: white;
 
+.firstSection {
+    padding-bottom: 50px;
+}
+
 section {
     background-color: #121212;
-    padding-bottom: 50px;
 }
 .contentContainer {
     padding-top: 125px;
@@ -56,9 +59,7 @@ section {
         }
         .awssld__content {
             background-color: transparent !important;
-        }
-
-        
+        }        
     }
 }
 
@@ -131,5 +132,32 @@ section {
             color: #8492a6;
         }
     }
+}
 
+.fourthSection {
+    background-color: white;
+    display: flex;
+
+    .imageContentContainer {
+        margin-top: 50px;
+
+        img {
+            width: 100%
+        }
+    }
+
+    .secondAltContentContainer {
+        margin-top: 50px;
+
+        h3 {
+            font-size: 1.75rem;
+            color: #3C4858;
+            font-weight: 500;
+        }
+        
+        p {
+            margin-top: 15px;
+            color: #8492a6;
+        }
+    }
 }

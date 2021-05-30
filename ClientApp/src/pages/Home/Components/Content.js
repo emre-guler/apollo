@@ -12,8 +12,8 @@ const Content = () => {
   const AutoplaySlider = withAutoplay(AwesomeSlider);
   const [words] = useState(["CS:GO", "Valorant", "LOL"]);
   return (
-    <>
-      <section>
+    <div style={{marginBottom: 50}}>
+      <section className={"firstSection"}>
         <Container>
           <Row className={"contentContainer"}>
             <Col xs={12} md={12} xl={6}>
@@ -97,15 +97,33 @@ const Content = () => {
                 </div>
                 <div className={"paragraphContainer"}>
                   <p>{t("AltContent")}</p>
-                  <br />
-                  <p>{t("AltContent")}</p>
+                </div>
+                <div>
+                  <p>{t("SecondAltContent")}</p>
                 </div>
               </div>
             </Col>
           </Row>
         </Container>
       </section>
-    </>
+      <section className={"fourthSection"}>
+        <Container>
+          <Row>
+            <Col xs={12} md={6} xl={6}>
+              <div className={"imageContentContainer"}>
+                <img src="" alt="Apollo content image" />
+              </div>
+            </Col>
+            <Col xs={12} md={6} xl={6}>
+              <div className={"secondAltContentContainer"}>
+                <h3>{t("PlayInATeamTitle")}</h3>
+                <p>{t("PlayInATeamContent")}</p>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+    </div>
   );
 };
 
