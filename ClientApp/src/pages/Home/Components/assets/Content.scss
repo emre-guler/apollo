@@ -66,7 +66,8 @@ section {
 .secondSection {
     background-color: white;
     display: flex;
-    padding: 50px;
+    padding-top: 75px;
+    padding-bottom: 75px;
     
     .altContentContainer {
         h3 {
@@ -112,7 +113,8 @@ section {
 }
 
 .thirdSection {
-    padding: 50px;
+    padding-top: 75px;
+    padding-bottom: 75px;
     h3 {
         color: white;
         font-size: 28px;
@@ -147,8 +149,8 @@ section {
     }
 
     .secondAltContentContainer {
-        margin-top: 50px;
-
+        margin-top: 75px;
+        margin-bottom: 75px;
         h3 {
             font-size: 1.75rem;
             color: #3C4858;

@@ -12,7 +12,7 @@ const Content = () => {
   const AutoplaySlider = withAutoplay(AwesomeSlider);
   const [words] = useState(["CS:GO", "Valorant", "LOL"]);
   return (
-    <div style={{marginBottom: 50}}>
+    <div style={{ marginBottom: 50 }}>
       <section className={"firstSection"}>
         <Container>
           <Row className={"contentContainer"}>

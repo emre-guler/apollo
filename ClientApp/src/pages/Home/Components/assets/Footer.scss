@@ -1,3 +1,21 @@
 footer {
     background-color: #121212;
+    padding: 15px;
+
+    .footerContainer {
+        margin-top: 50px;
+        margin-bottom: 50px;
+
+        .footerLeftContainer {
+            img {
+                max-width: 225px;
+            }
+            p {
+                margin-top: 15px;
+                color:rgba(255, 255, 255, .4);
+                max-width: 80%;
+            }
+        }
+    }
+
 }
