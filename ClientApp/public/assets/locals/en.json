@@ -28,5 +28,17 @@
     "SelectUserTypeContent": "Select your user type for attend the Apollo World.",
     "RegisterAsPlayer": "Register as Player",
     "RegisterAsTeam": "Register as Team",
-    "DoYouHaveAccount": "Already have an account?"
+    "DoYouHaveAccount": "Already have an account?",
+    "TeamName": "Team Name:",
+    "TeamNamePlaceHolder": "Team Name",
+    "Email": "E-Mail: ",
+    "EmailPlaceHolder": "E-Mail",
+    "PhoneNumber": "Phone Number: ",
+    "PhoneNumberPlaceHolder": "(5XX) XXX XX XX",
+    "Password": "Password: ",
+    "PasswordPlaceHolder": "Password",
+    "PasswordAgain": "Password Again: ",
+    "AccepContracts": "I read and accept all contracts.",
+    "RegisterWelcome": "You are about to step into the world of Apollo...",
+    "RegisterWelcomeAlt": "Welcome aboard now. :)"
 }

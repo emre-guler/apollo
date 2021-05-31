@@ -28,5 +28,17 @@
     "SelectUserTypeContent": "Apollo dünyasına katılabilmek için, kullanıcı tipinizi seçin.",
     "RegisterAsPlayer": "Kayıt Ol (Oyuncu)",
     "RegisterAsTeam": "Kayıt Ol (Takım)",
-    "DoYouHaveAccount": "Zaten bir hesabın var mı?"
+    "DoYouHaveAccount": "Zaten bir hesabın var mı?",
+    "TeamName": "Takım Adı:",
+    "TeamNamePlaceHolder": "Takım Adı",
+    "Email": "E-Posta: ",
+    "EmailPlaceHolder": "E-Posta",
+    "PhoneNumber": "Telefon Numarası: ",
+    "PhoneNumberPlaceHolder": "(5XX) XXX XX XX",
+    "Password": "Şifre: ",
+    "PasswordPlaceHolder": "Şifre",
+    "PasswordAgain": "Şifre Tekrar: ",
+    "AccepContracts": "Tüm sözleşmeleri okudum, kabul ediyorum.",
+    "RegisterWelcome": "Apollo Dünyasına Adım Atmak Üzeresin...",
+    "RegisterWelcomeAlt": "Şimdiden aramıza hoş geldin. :)"
 }

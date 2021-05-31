@@ -8,8 +8,9 @@ import RegisterTeam from "./Components/RegisterTeam";
 
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import "./Components/assets/Register.scss";
 import { Link } from "react-router-dom";
+
+import "./Components/assets/SelectUserType.scss";
 
 const Register = () => {
   const { t } = useTranslation();
