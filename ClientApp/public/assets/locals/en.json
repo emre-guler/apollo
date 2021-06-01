@@ -40,5 +40,11 @@
     "PasswordAgain": "Password Again: ",
     "AccepContracts": "I read and accept all contracts.",
     "RegisterWelcome": "You are about to step into the world of Apollo...",
-    "RegisterWelcomeAlt": "Welcome aboard now. :)"
+    "RegisterWelcomeAlt": "Welcome aboard now. :)",
+    "TeamNameMustBeFilled": "Team Name area must be filled.",
+    "MailMustBeFilled": "E-Mail area must be filled.",
+    "PhoneNumberMustBeFilled": "Phone Number area must be filled.",
+    "PasswordMustBeFilled": "Password area must be filled.",
+    "MustBeSamePassword": "Two passwords must be same.",
+    "MustBeChecked": "Checkbox must be checked."
 }

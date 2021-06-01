@@ -5,6 +5,7 @@ import { Route } from "react-router";
 
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import { ToastProvider } from 'react-toast-notifications';
 import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi from "i18next-http-backend";
 
@@ -49,7 +50,9 @@ const App = () => {
 
 ReactDOM.render(
   <Context>
-    <App />
+    <ToastProvider>
+      <App />
+    </ToastProvider>
   </Context>,
   rootElement
 );

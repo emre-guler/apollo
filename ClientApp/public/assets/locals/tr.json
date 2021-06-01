@@ -40,5 +40,11 @@
     "PasswordAgain": "Şifre Tekrar: ",
     "AccepContracts": "Tüm sözleşmeleri okudum, kabul ediyorum.",
     "RegisterWelcome": "Apollo Dünyasına Adım Atmak Üzeresin...",
-    "RegisterWelcomeAlt": "Şimdiden aramıza hoş geldin. :)"
+    "RegisterWelcomeAlt": "Şimdiden aramıza hoş geldin. :)",
+    "TeamNameMustBeFilled": "Takım adı alanı doldurulmalı.",
+    "MailMustBeFilled": "E-Posta alanı doldurulmalı.",
+    "PhoneNumberMustBeFilled": "Telefon Numarası alanı doldurulmalı.",
+    "PasswordMustBeFilled": "Parola alanı doldurulmalı.",
+    "MustBeSamePassword": "İki parola da aynı olmalı.",
+    "MustBeChecked": "Sözleşmeler kabul edilmeli."
 }
