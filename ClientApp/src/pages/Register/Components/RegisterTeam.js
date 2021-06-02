@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
-import { DomainContext } from "../../../context";
+import { DomainContext }  from "../../../context";
 import ErrorHandler from '../../../Methods/ErrorHandler';
 import axios from "axios";
 
@@ -75,7 +75,7 @@ const RegisterTeam = () => {
       axios
         .post(requestUrl)
         .then((response) => {
-          
+
         })
         .catch((error) => {
           const response = new ErrorHandler().handler(error);

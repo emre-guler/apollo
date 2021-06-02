@@ -9,9 +9,9 @@ const Context = ({children}) => {
 
     return (
         <TokenContext.Provider value={[token, setToken]}>
-            <TokenContext.Provider value={[domain, setDomain]}>
+            <DomainContext.Provider value={[domain, setDomain]}>
                 {children}
-            </TokenContext.Provider>
+            </DomainContext.Provider>
         </TokenContext.Provider>
     )
 };
