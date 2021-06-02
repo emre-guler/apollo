@@ -46,5 +46,14 @@
     "PhoneNumberMustBeFilled": "Phone Number area must be filled.",
     "PasswordMustBeFilled": "Password area must be filled.",
     "MustBeSamePassword": "Two passwords must be same.",
-    "MustBeChecked": "Checkbox must be checked."
+    "MustBeChecked": "Checkbox must be checked.",
+    "UserExists": "The e-mail address or phone number is already in use.",
+    "MustBeFilled": "All fields must be filled correctly.",
+    "InvalidCredentials": "Invalid Credentials.",
+    "Unauthorized": "You are not authorized to perform this action.",
+    "InvalidCode": "Invalid code.",
+    "LinkExpired": "Your connection is expired.",
+    "UserNotFind": "Something went wrong.",
+    "NotFound": "Something went wrong.",
+    "SomethingWentWrong": "Something went wrong."
 }

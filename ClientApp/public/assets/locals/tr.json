@@ -35,9 +35,9 @@
     "EmailPlaceHolder": "E-Posta",
     "PhoneNumber": "Telefon Numarası: ",
     "PhoneNumberPlaceHolder": "(5XX) XXX XX XX",
-    "Password": "Şifre: ",
-    "PasswordPlaceHolder": "Şifre",
-    "PasswordAgain": "Şifre Tekrar: ",
+    "Password": "Parola: ",
+    "PasswordPlaceHolder": "Parola",
+    "PasswordAgain": "Parola Tekrar: ",
     "AccepContracts": "Tüm sözleşmeleri okudum, kabul ediyorum.",
     "RegisterWelcome": "Apollo Dünyasına Adım Atmak Üzeresin...",
     "RegisterWelcomeAlt": "Şimdiden aramıza hoş geldin. :)",
@@ -46,5 +46,14 @@
     "PhoneNumberMustBeFilled": "Telefon Numarası alanı doldurulmalı.",
     "PasswordMustBeFilled": "Parola alanı doldurulmalı.",
     "MustBeSamePassword": "İki parola da aynı olmalı.",
-    "MustBeChecked": "Sözleşmeler kabul edilmeli."
+    "MustBeChecked": "Sözleşmeler kabul edilmeli.",
+    "UserExists": "E-Mail adresi veya telefon numarası zaten kullanımda.",
+    "MustBeFilled": "Tüm alanlar doğru şekilde doldurulmalı.",
+    "InvalidCredentials": "Hatalı E-Mail veya Parola.",
+    "Unauthorized": "Bu eylemi gerçekleştirme yetkiniz yok.",
+    "InvalidCode": "Geçersiz kod.",
+    "LinkExpired": "Bağlantı süreniz doldu.",
+    "UserNotFind": "Bir hata oluştu.",
+    "NotFound": "Bir hata oluştu.",
+    "SomethingWentWrong": "Bir hata oluştu."
 }
