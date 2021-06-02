@@ -83,6 +83,7 @@ const RegisterTeam = () => {
       formData.append("MailAddress", eMailRef.current.value);
       formData.append("PhoneNumber", phoneNumberRef.current.value);
       formData.append("Password", passwordRef.current.value);
+      formData.append("ProfilePhoto", teamLogoRef.current.files[0]);
       axios
         .post(requestUrl, formData, {
           headers: {
