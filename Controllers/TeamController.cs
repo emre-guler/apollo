@@ -122,7 +122,7 @@ namespace Apollo.Controllers
         }
 
         [Authorize]
-        [HttpPost("/verification/{hashedData")]
+        [HttpPost("/verification/{hashedData}")]
         public async Task<IActionResult> TeamMailVerify([FromForm] int confirmationCode, [FromQuery] string hashedData)
         {
             var claims = HttpContext.User.Identity as ClaimsIdentity;
