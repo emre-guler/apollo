@@ -16,7 +16,7 @@
     "SecondAltContent": "Sana uygun olan en iyi takımı bul. Mücadeleye başla.",
     "PlayInATeamTitle": "Hayalini kurduğun takımlarda oyna",
     "PlayInATeamContent": "CSGO, Valorant, League of Legends? Kendini sektörün en büyüklerine tanıt ve o takımlarda oynama şansını yakala.",
-    "FooterText": "Apollo'da takımlar adaylara başvurur. Profesyonel oyuncularda profilleriyel en iyi takımlarda oynar.",
+    "FooterText": "Apollo'da takımlar adaylara başvurur. Profesyonel oyuncularda en iyi takımlarda oynar.",
     "FooterTitle": "Sözleşmeler",
     "HomePage": "Ana Sayfa",
     "Contact": "İletişim",
@@ -38,6 +38,8 @@
     "Password": "Parola: ",
     "PasswordPlaceHolder": "Parola",
     "PasswordAgain": "Parola Tekrar: ",
+    "TeamLogo": "Takım Logo:",
+    "TeamLogoPlaceHolder": "Logo seç",
     "AccepContracts": "Tüm sözleşmeleri okudum, kabul ediyorum.",
     "RegisterWelcome": "Apollo Dünyasına Adım Atmak Üzeresin...",
     "RegisterWelcomeAlt": "Şimdiden aramıza hoş geldin. :)",
@@ -46,6 +48,7 @@
     "PhoneNumberMustBeFilled": "Telefon Numarası alanı doldurulmalı.",
     "PasswordMustBeFilled": "Parola alanı doldurulmalı.",
     "MustBeSamePassword": "İki parola da aynı olmalı.",
+    "LogoMustBeFilled": "Takım logosu yüklenmeli.",
     "MustBeChecked": "Sözleşmeler kabul edilmeli.",
     "UserExists": "E-Mail adresi veya telefon numarası zaten kullanımda.",
     "MustBeFilled": "Tüm alanlar doğru şekilde doldurulmalı.",
@@ -55,5 +58,6 @@
     "LinkExpired": "Bağlantı süreniz doldu.",
     "UserNotFind": "Bir hata oluştu.",
     "NotFound": "Bir hata oluştu.",
-    "SomethingWentWrong": "Bir hata oluştu."
+    "SomethingWentWrong": "Bir hata oluştu.",
+    "RegisterSuccess": "Hesabınız başarılı şekilde oluşturuldu."
 }

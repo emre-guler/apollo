@@ -38,6 +38,8 @@
     "Password": "Password: ",
     "PasswordPlaceHolder": "Password",
     "PasswordAgain": "Password Again: ",
+    "TeamLogo": "Team Logo:",
+    "TeamLogoPlaceHolder": "Select a logo",
     "AccepContracts": "I read and accept all contracts.",
     "RegisterWelcome": "You are about to step into the world of Apollo...",
     "RegisterWelcomeAlt": "Welcome aboard now. :)",
@@ -46,6 +48,7 @@
     "PhoneNumberMustBeFilled": "Phone Number area must be filled.",
     "PasswordMustBeFilled": "Password area must be filled.",
     "MustBeSamePassword": "Two passwords must be same.",
+    "LogoMustBeFilled": "Team logo must be upload.",
     "MustBeChecked": "Checkbox must be checked.",
     "UserExists": "The e-mail address or phone number is already in use.",
     "MustBeFilled": "All fields must be filled correctly.",
@@ -55,5 +58,6 @@
     "LinkExpired": "Your connection is expired.",
     "UserNotFind": "Something went wrong.",
     "NotFound": "Something went wrong.",
-    "SomethingWentWrong": "Something went wrong."
+    "SomethingWentWrong": "Something went wrong.",
+    "RegisterSuccess": "Your account has been successfully created."
 }

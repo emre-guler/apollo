@@ -20,10 +20,11 @@ const RegisterTeam = () => {
   const passwordRef = useRef();
   const passwordAgainRef = useRef();
   const checkBoxRef = useRef();
+  const teamLogoRef = useRef();
 
   const { addToast } = useToasts();
 
-  const SendRegisterRequest = () => {
+  const SendRegisterRequest = async () => {
     const emailRegex = new RegExp(
       "^([\\w\\.\\-]+)@([\\w\\-]+)((\\.(\\w){2,3})+)$"
     );
@@ -70,11 +71,39 @@ const RegisterTeam = () => {
         appearance: "error",
         autoDismiss: true,
       });
+    } else if (teamLogoRef.current.files.length !== 1) {
+      addToast(t("LogoMustBeFilled"), {
+        appearance: "error",
+        autoDismiss: true,
+      });
     } else {
       const requestUrl = domain + "team-register";
-      axios
-        .post(requestUrl)
-        .then((response) => {})
+      await axios
+        .post(
+          requestUrl,
+          {
+            TeamName: teamNameRef.current.value,
+            MailAddress: eMailRef.current.value,
+            PhoneNumber: phoneNumberRef.current.value,
+            Password: passwordRef.current.value,
+            ProfilePhoto: teamLogoRef.current.files[0],
+          },
+          {
+            headers: {
+              "content-type": "multipart/form-data",
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            if (response == true) {
+              addToast(t("RegisterSuccess"), {
+                appearance: "success",
+                autoDismiss: true
+              });
+            }
+          }
+        })
         .catch((error) => {
           const response = ErrorHandler(error);
           addToast(t(response), {
@@ -132,6 +161,19 @@ const RegisterTeam = () => {
                       type="password"
                       ref={passwordAgainRef}
                       placeholder={t("PasswordPlaceHolder")}
+                    />
+                  </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridLogo">
+                    <Form.Label>{t("TeamLogo")}</Form.Label>
+                    <Form.File
+                      ref={teamLogoRef}
+                      id="custom-file"
+                      type="file"
+                      accept="image/png, image/jpeg"
+                      label={t("TeamLogoPlaceHolder")}
+                      custom
                     />
                   </Form.Group>
                 </Form.Row>
