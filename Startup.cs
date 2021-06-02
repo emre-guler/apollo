@@ -25,7 +25,7 @@ namespace Apollo
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options => 
+            services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build());
             });
@@ -42,8 +42,9 @@ namespace Apollo
                     .AddScoped<MailService>()
                     .AddScoped<GeneralMethodsService>()
                     .AddScoped<ViewRenderService>();
+                    
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options => 
+                .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -51,9 +52,9 @@ namespace Apollo
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                        ValidIssuer = Configuration["Jwt:SecureKey"],
+                        ValidAudience = Configuration["Jwt:SecureKey"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecureKey"]))
                     };
                 });
         }
@@ -77,7 +78,7 @@ namespace Apollo
             app.UseRouting();
 
             app.UseAuthentication();
-            
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
