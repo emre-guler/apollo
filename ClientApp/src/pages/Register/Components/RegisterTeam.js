@@ -3,8 +3,8 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
-import { DomainContext }  from "../../../context";
-import ErrorHandler from '../../../Methods/ErrorHandler';
+import { DomainContext } from "../../../context";
+import ErrorHandler from "../../../Methods/ErrorHandler";
 import axios from "axios";
 
 import "./assets/RegisterTeam.scss";
@@ -74,14 +74,12 @@ const RegisterTeam = () => {
       const requestUrl = domain + "team-register";
       axios
         .post(requestUrl)
-        .then((response) => {
-
-        })
+        .then((response) => {})
         .catch((error) => {
-          const response = new ErrorHandler().handler(error);
-          addToast(response, {
+          const response = ErrorHandler(error);
+          addToast(t(response), {
             appearance: "error",
-            autoDismiss: true
+            autoDismiss: true,
           });
         });
     }
