@@ -25,10 +25,7 @@ namespace Apollo
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build());
-            });
+            services.AddCors();
             services.AddControllersWithViews();
             services.AddSpaStaticFiles(configuration =>
             {
@@ -42,7 +39,7 @@ namespace Apollo
                     .AddScoped<MailService>()
                     .AddScoped<GeneralMethodsService>()
                     .AddScoped<ViewRenderService>();
-                    
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -61,6 +58,10 @@ namespace Apollo
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(builder =>
+                builder.WithOrigins("http://localhost:3000").AllowAnyHeader()
+            );
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -76,6 +77,8 @@ namespace Apollo
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
 
