@@ -9,25 +9,22 @@ import RegisterTeam from "./Components/RegisterTeam";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import UserType from "../../Enums/UserType";
 
 import "./Components/assets/SelectUserType.scss";
 
 const Register = () => {
   const { t } = useTranslation();
-  const userTypeEnum = Object.freeze({
-    None: 0,
-    Player: 1,
-    Team: 2,
-  });
-  const [userType, setUserType] = useState(userTypeEnum.None);
+  
+  const [userType, setUserType] = useState(UserType.None);
   const renderRegister = () => {
-    if (userTypeEnum.Team === userType) {
+    if (UserType.Team === userType) {
       return (
         <>
           <RegisterTeam />
         </>
       );
-    } else if (userTypeEnum.Player === userType) {
+    } else if (UserType.Player === userType) {
       return (
         <>
           <RegisterPlayer />
@@ -46,13 +43,13 @@ const Register = () => {
                     <div className={"registerButtonContainer"}>
                       <Button
                         variant="outline-dark"
-                        onClick={() => setUserType(userTypeEnum.Player)}
+                        onClick={() => setUserType(UserType.Player)}
                       >
                         {t("RegisterAsPlayer")}
                       </Button>
                       <Button
                         variant="outline-dark"
-                        onClick={() => setUserType(userTypeEnum.Team)}
+                        onClick={() => setUserType(UserType.Team)}
                       >
                         {t("RegisterAsTeam")}
                       </Button>

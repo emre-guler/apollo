@@ -1,14 +1,18 @@
-import React, { useRef } from "react";
+import React, { useRef, useContext } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
+import { DomainContext } from "../../../context";
+import ErrorHandler from '../../../Methods/ErrorHandler';
 import axios from "axios";
 
 import "./assets/RegisterTeam.scss";
 
 const RegisterTeam = () => {
   const { t } = useTranslation();
+
+  const [domain, setDomain] = useContext(DomainContext);
 
   const teamNameRef = useRef();
   const eMailRef = useRef();
@@ -20,10 +24,11 @@ const RegisterTeam = () => {
   const { addToast } = useToasts();
 
   const SendRegisterRequest = () => {
-    const emailRegex = new RegExp("^([\\w\\.\\-]+)@([\\w\\-]+)((\\.(\\w){2,3})+)$");
+    const emailRegex = new RegExp(
+      "^([\\w\\.\\-]+)@([\\w\\-]+)((\\.(\\w){2,3})+)$"
+    );
     const phoneRegex = new RegExp("\\(?\\d{3}\\)?-? *\\d{3}-? *-?\\d{4}");
 
-    debugger;
     if (teamNameRef.current.value.length === 0) {
       addToast(t("TeamNameMustBeFilled"), {
         appearance: "error",
@@ -66,7 +71,19 @@ const RegisterTeam = () => {
         autoDismiss: true,
       });
     } else {
-      console.log("Send request!");
+      const requestUrl = domain + "team-register";
+      axios
+        .post(requestUrl)
+        .then((response) => {
+          
+        })
+        .catch((error) => {
+          const response = new ErrorHandler().handler(error);
+          addToast(response, {
+            appearance: "error",
+            autoDismiss: true
+          });
+        });
     }
   };
   return (
