@@ -24,7 +24,7 @@ const RegisterTeam = () => {
 
   const { addToast } = useToasts();
 
-  const SendRegisterRequest = async () => {
+  const SendRegisterRequest = () => {
     const emailRegex = new RegExp(
       "^([\\w\\.\\-]+)@([\\w\\-]+)((\\.(\\w){2,3})+)$"
     );
@@ -78,28 +78,23 @@ const RegisterTeam = () => {
       });
     } else {
       const requestUrl = domain + "team-register";
-      await axios
-        .post(
-          requestUrl,
-          {
-            TeamName: teamNameRef.current.value,
-            MailAddress: eMailRef.current.value,
-            PhoneNumber: phoneNumberRef.current.value,
-            Password: passwordRef.current.value,
-            ProfilePhoto: teamLogoRef.current.files[0],
+      let formData = new FormData();
+      formData.append("TeamName", teamNameRef.current.value);
+      formData.append("MailAddress", eMailRef.current.value);
+      formData.append("PhoneNumber", phoneNumberRef.current.value);
+      formData.append("Password", passwordRef.current.value);
+      axios
+        .post(requestUrl, formData, {
+          headers: {
+            "content-type": "multipart/form-data"
           },
-          {
-            headers: {
-              "content-type": "multipart/form-data",
-            },
-          }
-        )
+        })
         .then((response) => {
           if (response.status === 200) {
             if (response == true) {
               addToast(t("RegisterSuccess"), {
                 appearance: "success",
-                autoDismiss: true
+                autoDismiss: true,
               });
             }
           }
