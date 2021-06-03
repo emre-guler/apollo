@@ -48,12 +48,12 @@ namespace Apollo.Controllers
                 }
                 else
                 {
-                    return BadRequest(error: new { errorCode = ErrorCode.UserExists });
+                    return Ok((int) ErrorCode.UserExists);
                 }
             }
             else
             {
-                return BadRequest(error: new { errorCode = ErrorCode.MustBeFilled });
+                return Ok((int) ErrorCode.MustBeFilled);
             }
         }
 
@@ -71,7 +71,7 @@ namespace Apollo.Controllers
                 });
                 return Ok(true);
             }
-            return BadRequest(error: new { errorCode = ErrorCode.InvalidCredentials });
+            return Ok((int) ErrorCode.InvalidCredentials);
         }
 
         [Authorize]
@@ -96,7 +96,7 @@ namespace Apollo.Controllers
                     return Ok(true);
                 }
             }
-            return BadRequest(error: new { errorCode = ErrorCode.Unauthorized });
+            return Ok((int) ErrorCode.Unauthorized);
         }
 
         [Authorize]
@@ -114,7 +114,7 @@ namespace Apollo.Controllers
                     return Ok(true);
                 }
             }
-            return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
+            return Ok((int) ErrorCode.Unauthorized);
         }
 
         [Authorize]
@@ -132,10 +132,10 @@ namespace Apollo.Controllers
                 }
                 else
                 {
-                    return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
+                    return Ok((int) ErrorCode.LinkExpired);
                 }
             }
-            return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
+            return Ok((int) ErrorCode.Unauthorized);
         }
 
         [Authorize]
@@ -156,15 +156,15 @@ namespace Apollo.Controllers
                     }
                     else
                     {
-                        return BadRequest(error: new { erroCode = ErrorCode.InvalidCode });
+                        return Ok((int) ErrorCode.InvalidCode);
                     }
                 }
                 else
                 {
-                    return BadRequest(error: new { erroCode = ErrorCode.LinkExpired });
+                    return Ok((int) ErrorCode.LinkExpired);
                 }
             }
-            return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
+            return Ok((int) ErrorCode.Unauthorized);
         }
 
         [Authorize]
@@ -180,9 +180,9 @@ namespace Apollo.Controllers
                 {
                     return Ok(true);
                 }
-                return BadRequest(error: new { errorCode = ErrorCode.UserNotFind });
+                return Ok((int) ErrorCode.UserNotFind);
             }
-            return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
+            return Ok((int) ErrorCode.Unauthorized);
         }
 
         [Authorize]
@@ -198,9 +198,9 @@ namespace Apollo.Controllers
                 {
                     return Ok(true);
                 }
-                return BadRequest(error: new { erroCode = ErrorCode.UserNotFind });
+                return Ok((int) ErrorCode.UserNotFind);
             }
-            return BadRequest(error: new { erroCode = ErrorCode.Unauthorized });
+            return Ok((int) ErrorCode.Unauthorized);
         }
 
         [AllowAnonymous]
@@ -217,12 +217,12 @@ namespace Apollo.Controllers
                 }
                 else
                 {
-                    return BadRequest(error: new { erroCode = ErrorCode.UserNotFind });
+                    return Ok((int) ErrorCode.UserNotFind);
                 }
             }
             else
             {
-                return BadRequest(error: new { errorCode = ErrorCode.MustBeFilled });
+                return Ok((int) ErrorCode.MustBeFilled);
             }
         }
 
@@ -238,7 +238,7 @@ namespace Apollo.Controllers
                     return Ok(true);
                 }
             }
-            return BadRequest(error: new { errorCode = ErrorCode.LinkExpired });
+            return Ok((int) ErrorCode.LinkExpired);
         }
 
 
@@ -258,11 +258,11 @@ namespace Apollo.Controllers
                     }
                     else
                     {
-                        return BadRequest(error: new { errorCode = ErrorCode.InvalidCode });
+                        return Ok((int) ErrorCode.InvalidCode);
                     }
                 }
             }
-            return BadRequest(error: new { erroCode = ErrorCode.LinkExpired });
+            return Ok((int) ErrorCode.LinkExpired);
         }
     }
 }

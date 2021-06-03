@@ -92,17 +92,26 @@ const RegisterTeam = () => {
         })
         .then((response) => {
           if (response.status === 200) {
-            if (response == true) {
+            if (response.data == true) {
               addToast(t("RegisterSuccess"), {
                 appearance: "success",
                 autoDismiss: true,
               });
+            } else {
+              addToast(t(ErrorHandler(response.status)), {
+                appearance: "error",
+                autoDismiss: true,
+              });
             }
+          } else {
+            addToast("SomethingWentWrong", {
+              appearance: "error",
+              autoDismiss: true,
+            });
           }
         })
         .catch((error) => {
-          const response = ErrorHandler(error);
-          addToast(t(response), {
+          addToast("SomethingWentWrong", {
             appearance: "error",
             autoDismiss: true,
           });

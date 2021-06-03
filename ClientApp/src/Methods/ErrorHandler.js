@@ -1,5 +1,4 @@
 import ErrorCode from "../Enums/ErrorCode";
-import { useTranslation } from "react-i18next";
 
 const ErrorHandler = (errorCode) => {
   if (ErrorCode.UserExists == errorCode) {
