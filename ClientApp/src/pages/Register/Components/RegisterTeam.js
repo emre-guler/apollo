@@ -98,7 +98,7 @@ const RegisterTeam = () => {
                 autoDismiss: true,
               });
             } else {
-              addToast(t(ErrorHandler(response.status)), {
+              addToast(t(ErrorHandler(response.data)), {
                 appearance: "error",
                 autoDismiss: true,
               });

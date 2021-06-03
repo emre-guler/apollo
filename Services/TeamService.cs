@@ -92,11 +92,11 @@ namespace Apollo.Services
                 CreatedAt = DateTime.Now,
                 MailAddress = teamVM.MailAddress,
                 Password = BCrypt.Net.BCrypt.HashPassword(teamVM.Password),
-                PhoneNumber = teamVM.TeamName,
+                PhoneNumber = teamVM.PhoneNumber,
                 ProfilePhotoPath = profilePhotoPath
             });
             await _db.SaveChangesAsync();
-            await _mailService.TeamWelcomeMail(teamVM.MailAddress);
+           //await _mailService.TeamWelcomeMail(teamVM.MailAddress);
         }
 
         public async Task<Team> TeamLoginControl(LoginViewModel teamVM)
