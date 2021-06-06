@@ -56,7 +56,7 @@ const RegisterTeam = () => {
         appearance: "error",
         autoDismiss: true,
       });
-    } else if (passwordAgainRef.current.value.length === 0) {
+    } else if (passwordAgainRef.current.value.length < 7) {
       addToast(t("PasswordMustBeFilled"), {
         appearance: "error",
         autoDismiss: true,
@@ -87,7 +87,7 @@ const RegisterTeam = () => {
       axios
         .post(requestUrl, formData, {
           headers: {
-            "content-type": "multipart/form-data"
+            "content-type": "multipart/form-data",
           },
         })
         .then((response) => {
