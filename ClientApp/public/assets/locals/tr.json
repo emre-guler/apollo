@@ -40,7 +40,7 @@
     "PasswordAgain": "Parola Tekrar: ",
     "TeamLogo": "Takım Logo:",
     "TeamLogoPlaceHolder": "Logo seç",
-    "AccepContracts": "Tüm sözleşmeleri okudum, kabul ediyorum.",
+    "AcceptContracts": "Tüm sözleşmeleri okudum, kabul ediyorum.",
     "RegisterWelcome": "Apollo Dünyasına Adım Atmak Üzeresin...",
     "RegisterWelcomeAlt": "Şimdiden aramıza hoş geldin. :)",
     "TeamNameMustBeFilled": "Takım adı alanı doldurulmalı.",
@@ -77,5 +77,7 @@
     "NicknamePlaceHolder": "Nickname",
     "CityPlaceHolder": "Şehir seçin..",
     "BirthDatePlaceHolder": "Doğum Tarihi seçin..",
-    "GenderPlaceHolder": "Cinsiyet Seçin.."
+    "GenderPlaceHolder": "Cinsiyet Seçin..",
+    "Man": "Erkek",
+    "Woman": "Kadın"
 }

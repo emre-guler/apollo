@@ -40,7 +40,7 @@
     "PasswordAgain": "Password Again: ",
     "TeamLogo": "Team Logo:",
     "TeamLogoPlaceHolder": "Select a logo",
-    "AccepContracts": "I read and accept all contracts.",
+    "AcceptContracts": "I read and accept all contracts.",
     "RegisterWelcome": "You are about to step into the world of Apollo...",
     "RegisterWelcomeAlt": "Welcome aboard now. :)",
     "TeamNameMustBeFilled": "Team Name area must be filled.",
@@ -77,5 +77,7 @@
     "NicknamePlaceHolder": "Nickname",
     "CityPlaceHolder": "Select a City..",
     "BirthDatePlaceHolder": "Select Birth Date..",
-    "GenderPlaceHolder": "Select Gender.."
+    "GenderPlaceHolder": "Select Gender..",
+    "Man": "Man",
+    "Woman": "Woman"
 }

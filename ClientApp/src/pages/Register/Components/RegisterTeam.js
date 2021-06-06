@@ -185,7 +185,7 @@ const RegisterTeam = () => {
                 <Form.Group id="formGridCheckbox">
                   <Form.Check
                     type="checkbox"
-                    label={t("AccepContracts")}
+                    label={t("AcceptContracts")}
                     ref={checkBoxRef}
                   />
                   <br />
@@ -201,7 +201,7 @@ const RegisterTeam = () => {
               <hr />
               <div style={{ textAlign: "left", marginLeft: 25 }}>
                 <span>
-                  {t("DoYouHaveAccount")} <Link to="/">{t("Login")}</Link>{" "}
+                  {t("DoYouHaveAccount")} <Link to="/">{t("Login")}</Link>
                 </span>
               </div>
             </div>

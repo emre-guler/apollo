@@ -81,7 +81,7 @@ namespace Apollo.Services
             bool userControl = await _db.Players
                 .Where(x => x.MailAddress == mailAddress || x.PhoneNumber == phoneNumber)
                 .AnyAsync();
-            if (userControl)
+            if (!userControl)
             {
                 return true;
             }
