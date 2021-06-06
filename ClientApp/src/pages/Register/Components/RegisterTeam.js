@@ -7,7 +7,7 @@ import { DomainContext } from "../../../context";
 import ErrorHandler from "../../../Methods/ErrorHandler";
 import axios from "axios";
 
-import "./assets/RegisterTeam.scss";
+import "./assets/Register.scss";
 
 const RegisterTeam = () => {
   const { t } = useTranslation();
@@ -119,11 +119,11 @@ const RegisterTeam = () => {
     }
   };
   return (
-    <section className={"registerTeamContainer"}>
+    <section className={"registerContainer"}>
       <Container>
         <Row>
           <Col xs={12} md={12} xl={12} className={"container"}>
-            <div className={"registerTeamBox"}>
+            <div className={"registerBox"}>
               <h4>{t("RegisterWelcome")}</h4>
               <span>{t("RegisterWelcomeAlt")}</span>
               <Form>
